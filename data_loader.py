@@ -7,6 +7,7 @@ import math
 class DataLoader: 
     def __init__(self, csv_filename='raw_data.csv', data_path='../../../../media/raid/jessiezhang/noaa-data.db'):
         '''
+        load raw data from noaa database. converts location from lon-lat into x-y coords
         @type data_path: string
         @param data_path: the relative path to noaa database
         @type raw_data: list
