@@ -53,12 +53,12 @@ class TsganWrapper:
             Z_mb.append(Temp_Z)      
         return Z_mb 
 
-    def run_tgan(self, total_iterations, sub_iterations):
+    def run_tgan(self, total_iterations, sub_iterations, model_saved_name):
         # self.dataX_hat = tgan(self.dataX, self.parameters, self.noise_generator)
         
         for it in range(total_iterations):
             # Synthetic Data Generation
-            self.dataX_hat = tgan(self.dataX, self.parameters, self.noise_generator)
+            self.dataX_hat = tgan(self.dataX, self.parameters, self.noise_generator, model_saved_name)
             print('Finish Synthetic Data Generation')
 
             #%% Performance Metrics
@@ -89,8 +89,8 @@ class TsganWrapper:
     def results_mean_std(self):        
         disc_mean = np.round(np.mean(self.discriminative_score),4)
         disc_std = np.round(np.std(self.discriminative_score),4)
-        disc_mean = np.round(np.mean(self.discriminative_score),4)
-        disc_std = np.round(np.std(self.discriminative_score),4)
+        pred_mean = np.round(np.mean(self.discriminative_score),4)
+        pred_std = np.round(np.std(self.discriminative_score),4)
         return disc_mean, disc_std, pred_mean, pred_std
         # print('Discriminative Score - Mean: ' + str(np.round(np.mean(self.discriminative_score),4)) + ', Std: ' + str(np.round(np.std(self.discriminative_score),4)))
         # print('Predictive Score - Mean: ' + str(np.round(np.mean(self.predictive_score),4)) + ', Std: ' + str(np.round(np.std(self.predictive_score),4)))

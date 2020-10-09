@@ -33,7 +33,7 @@ def MinMaxScaler(dataX):
 
 #%% Start TGAN function (Input: Original data, Output: Synthetic Data)
 
-def tgan (dataX, parameters, random_generator):
+def tgan (dataX, parameters, random_generator, model_saved_name='my_model'):
   
     # Initialization on the Graph
     tf.reset_default_graph()

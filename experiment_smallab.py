@@ -1,3 +1,4 @@
+import logging
 import typing
 import numpy as np # ??
 
@@ -20,10 +21,16 @@ class TsganExperiment(Experiment):
         wrapper = TsganWrapper(x)
         wrapper.build_dataset()
         dataX = wrapper.dataX
-        print('Dataset is ready.')
+        logging.getLogger(self.get_logger_name()).info("Dataset is ready.")
+        # print('Dataset is ready.')
 
         wrapper.set_tgan_parameters('iterations', specification['iterations'])
-        results = wrapper.run_tgan(specification['total_iterations'], specification['sub_iterations'])
+        results = wrapper.run_tgan(specification['total_iterations'], specification['sub_iterations'], 'with_smallab')
+        logging.getLogger(self.get_logger_name()).info("Result is ready.")
+        logging.getLogger(self.get_logger_name()).info(results[0])
+        logging.getLogger(self.get_logger_name()).info(results[1])
+        logging.getLogger(self.get_logger_name()).info(results[2])
+        logging.getLogger(self.get_logger_name()).info(results[3])
         return {"discriminative score mean": results[0], "predictive score mean": results[2]}
 
 
