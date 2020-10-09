@@ -219,15 +219,15 @@ def tgan (dataX, parameters, random_generator):
         
     #%% Sessions    
     
-    sess = tf.Session()
-    sess.run(tf.global_variables_initializer())
+    # sess = tf.Session()
+    # sess.run(tf.global_variables_initializer())
 
     #%% attempting to save the model 
 
-    # saver = tf.train.Saver()
-    # sess = tf.Session()
-    # sess.run(tf.global_variables_initializer())
-    # saver.save(sess, './my_test_model')
+    saver = tf.train.Saver()
+    sess = tf.Session()
+    sess.run(tf.global_variables_initializer())
+    saver.save(sess, 'saved_models/test_model')
 
     #%% Joint Training
     
@@ -238,7 +238,7 @@ def tgan (dataX, parameters, random_generator):
       
         # Generator Training
         for kk in range(2):
-          
+        
             # Batch setting
             idx = np.random.permutation(No)
             train_idx = idx[:batch_size]     
@@ -307,6 +307,6 @@ def tgan (dataX, parameters, random_generator):
         dataX_hat = dataX_hat + min_val
 
     # save model as .kcpt
-    # saver.save(sess, './my_test_model')
+    saver.save(sess, 'saved_models/test_model')
     
     return dataX_hat
