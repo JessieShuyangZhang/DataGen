@@ -30,6 +30,26 @@ def MinMaxScaler(dataX):
     
     return dataX, min_val, max_val
 
+
+    
+#%% Random vector generation
+def random_generator (batch_size, z_dim, T_mb, Max_Seq_Len):
+    
+    Z_mb = list()
+    
+    for i in range(batch_size):
+        
+        Temp = np.zeros([Max_Seq_Len, z_dim])
+        
+        Temp_Z = np.random.uniform(0., 1, [T_mb[i], z_dim])
+    
+        Temp[:T_mb[i],:] = Temp_Z
+        
+        Z_mb.append(Temp_Z)
+    
+    return Z_mb
+
+
 #%% Start TGAN function (Input: Original data, Output: Synthetic Data)
 
 def tgan (dataX, parameters):
@@ -157,23 +177,7 @@ def tgan (dataX, parameters):
     
         return Y_hat   
     
-    
-    #%% Random vector generation
-    def random_generator (batch_size, z_dim, T_mb, Max_Seq_Len):
-      
-        Z_mb = list()
-        
-        for i in range(batch_size):
-            
-            Temp = np.zeros([Max_Seq_Len, z_dim])
-            
-            Temp_Z = np.random.uniform(0., 1, [T_mb[i], z_dim])
-        
-            Temp[:T_mb[i],:] = Temp_Z
-            
-            Z_mb.append(Temp_Z)
-      
-        return Z_mb
+# original place of random_generator
     
     #%% Functions
     
@@ -240,7 +244,14 @@ def tgan (dataX, parameters):
     
     sess = tf.Session()
     sess.run(tf.global_variables_initializer())
-    
+
+    #%% attempting to save the model 
+
+    # saver = tf.train.Saver()
+    # sess = tf.Session()
+    # sess.run(tf.global_variables_initializer())
+    # saver.save(sess, './my_test_model')
+    '''
     #%% Embedding Learning
     
     print('Start Embedding Network Training')
@@ -284,7 +295,7 @@ def tgan (dataX, parameters):
             print('step: '+ str(itt) + ', s_loss: ' + str(np.round(np.sqrt(step_g_loss_s),4)) )
                 
     print('Finish Training with Supervised Loss Only')
-    
+    '''
     #%% Joint Training
     
     print('Start Joint Training')
@@ -361,5 +372,8 @@ def tgan (dataX, parameters):
     if (Normalization_Flag == 1):
         dataX_hat = dataX_hat * max_val
         dataX_hat = dataX_hat + min_val
+
+    # save model as .kcpt
+    # saver.save(sess, './my_test_model')
     
     return dataX_hat

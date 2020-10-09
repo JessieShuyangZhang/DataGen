@@ -19,7 +19,8 @@ Outputs:
 
 '''
 #%% Necessary Packages
-
+import matplotlib
+matplotlib.use('Agg')
 from sklearn.manifold import TSNE
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
@@ -63,6 +64,9 @@ def PCA_Analysis (dataX, dataX_hat):
     plt.title('PCA plot')
     plt.xlabel('x-pca')
     plt.ylabel('y_pca')
+    out_png = 'out_file1.png'
+    plt.savefig(out_png)
+
     plt.show()
 
 
@@ -105,4 +109,7 @@ def tSNE_Analysis (dataX, dataX_hat):
     plt.title('t-SNE plot')
     plt.xlabel('x-tsne')
     plt.ylabel('y_tsne')
+    out_png = 'out_file2.png'
+    plt.savefig(out_png)
+
     plt.show()
