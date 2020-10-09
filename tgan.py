@@ -31,28 +31,9 @@ def MinMaxScaler(dataX):
     return dataX, min_val, max_val
 
 
-    
-#%% Random vector generation
-def random_generator (batch_size, z_dim, T_mb, Max_Seq_Len):
-    
-    Z_mb = list()
-    
-    for i in range(batch_size):
-        
-        Temp = np.zeros([Max_Seq_Len, z_dim])
-        
-        Temp_Z = np.random.uniform(0., 1, [T_mb[i], z_dim])
-    
-        Temp[:T_mb[i],:] = Temp_Z
-        
-        Z_mb.append(Temp_Z)
-    
-    return Z_mb
-
-
 #%% Start TGAN function (Input: Original data, Output: Synthetic Data)
 
-def tgan (dataX, parameters):
+def tgan (dataX, parameters, random_generator):
   
     # Initialization on the Graph
     tf.reset_default_graph()
@@ -132,9 +113,7 @@ def tgan (dataX, parameters):
             X_tilde = tf.contrib.layers.fully_connected(r_outputs, data_dim, activation_fn=tf.nn.sigmoid) 
 
         return X_tilde
-    
-    
-    
+
     #%% build a RNN generator network
     
     def generator (Z, T):      
@@ -161,8 +140,6 @@ def tgan (dataX, parameters):
 
         return S
       
-      
-      
     #%% builde a RNN discriminator network 
     
     def discriminator (H, T):
@@ -177,7 +154,7 @@ def tgan (dataX, parameters):
     
         return Y_hat   
     
-# original place of random_generator
+    # original place of random_generator
     
     #%% Functions
     
@@ -251,51 +228,7 @@ def tgan (dataX, parameters):
     # sess = tf.Session()
     # sess.run(tf.global_variables_initializer())
     # saver.save(sess, './my_test_model')
-    '''
-    #%% Embedding Learning
-    
-    print('Start Embedding Network Training')
-    
-    for itt in range(iterations):
-        
-        # Batch setting
-        idx = np.random.permutation(No)
-        train_idx = idx[:batch_size]     
-            
-        X_mb = list(dataX[i] for i in train_idx)
-        T_mb = list(dataT[i] for i in train_idx)
-            
-        # Train embedder        
-        _, step_e_loss = sess.run([E0_solver, E_loss_T0], feed_dict={X: X_mb, T: T_mb})
-        
-        if itt % 1000 == 0:
-            print('step: '+ str(itt) + ', e_loss: ' + str(np.round(np.sqrt(step_e_loss),4)) )        
-            
-    print('Finish Embedding Network Training')
-    
-    #%% Training Supervised Loss First
-    
-    print('Start Training with Supervised Loss Only')
-    
-    for itt in range(iterations):
-        
-        # Batch setting
-        idx = np.random.permutation(No)
-        train_idx = idx[:batch_size]     
-            
-        X_mb = list(dataX[i] for i in train_idx)
-        T_mb = list(dataT[i] for i in train_idx)        
-        
-        Z_mb = random_generator(batch_size, z_dim, T_mb, Max_Seq_Len)
-        
-        # Train generator       
-        _, step_g_loss_s = sess.run([GS_solver, G_loss_S], feed_dict={Z: Z_mb, X: X_mb, T: T_mb})
-                           
-        if itt % 1000 == 0:
-            print('step: '+ str(itt) + ', s_loss: ' + str(np.round(np.sqrt(step_g_loss_s),4)) )
-                
-    print('Finish Training with Supervised Loss Only')
-    '''
+
     #%% Joint Training
     
     print('Start Joint Training')
