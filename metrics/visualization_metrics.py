@@ -28,11 +28,12 @@ import numpy as np
 
 #%% PCA Analysis
 
-def PCA_Analysis (dataX, dataX_hat):
+def PCA_Analysis (dataX, dataX_hat, out_file):
 
     # Analysis Data Size
     # Sample_No = 1000
-    Sample_No = 200
+    # Sample_No = 200
+    Sample_No = 3 # testing on very small dataset. remember to change back
 
     # Data Preprocessing
     for i in range(Sample_No):
@@ -64,19 +65,19 @@ def PCA_Analysis (dataX, dataX_hat):
     plt.title('PCA plot')
     plt.xlabel('x-pca')
     plt.ylabel('y_pca')
-    out_png = 'out_file1.png'
-    plt.savefig(out_png)
+    plt.savefig(out_file)
 
     plt.show()
 
 
 #%% TSNE Analysis
 
-def tSNE_Analysis (dataX, dataX_hat):
+def tSNE_Analysis (dataX, dataX_hat, out_file):
 
     # Analysis Data Size
     # Sample_No = 1000
-    Sample_No = 200
+    # Sample_No = 200
+    Sample_No = 3 # testing on very small dataset. remember to change back
 
     # Preprocess
     for i in range(Sample_No):
@@ -109,7 +110,6 @@ def tSNE_Analysis (dataX, dataX_hat):
     plt.title('t-SNE plot')
     plt.xlabel('x-tsne')
     plt.ylabel('y_tsne')
-    out_png = 'out_file2.png'
-    plt.savefig(out_png)
+    plt.savefig(out_file)
 
     plt.show()

@@ -49,7 +49,7 @@ from predictive_score_metrics import predictive_score_metrics
 
 #%% Main Parameters
 # Experiments iterations
-Iteration = 2
+Iteration = 1 # was 2
 Sub_Iteration = 3
 
 #%% Data Loading
@@ -64,7 +64,7 @@ print('Dataset is ready.')
 parameters = dict()
 parameters['hidden_dim'] = len(dataX[0][0,:]) * 4
 parameters['num_layers'] = 3
-parameters['iterations'] = 50000
+parameters['iterations'] = 10000 # was 50000 took super long
 parameters['batch_size'] = 128
 parameters['module_name'] = 'gru'   # Other options: 'lstm' or 'lstmLN'
 parameters['z_dim'] = len(dataX[0][0,:])

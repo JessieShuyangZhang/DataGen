@@ -227,7 +227,7 @@ def tgan (dataX, parameters, random_generator, model_saved_name='my_model'):
     saver = tf.train.Saver()
     sess = tf.Session()
     sess.run(tf.global_variables_initializer())
-    saver.save(sess, 'saved_models/test_model')
+    saver.save(sess, 'saved_models/test_model') #fix this bug and below
 
     #%% Joint Training
     
