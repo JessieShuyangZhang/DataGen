@@ -1,0 +1,7 @@
+2020-10-16 09:09:08,071 - smallab.main_process_runner - INFO - Experiments:   0%|          | 0/1 [00:00<?, ?it/s]
+2020-10-16 09:09:08,085 - smallab.ceiling-high-bluebird-table - INFO - Dataset is ready.
+2020-10-16 09:09:26,565 - smallab.ceiling-high-bluebird-table - INFO - Visualization complete.
+2020-10-16 09:10:13,454 - smallab.ceiling-high-bluebird-table - INFO - Discriminative Score - Mean: 0.0, Std: 0.0
+2020-10-16 09:10:13,456 - smallab.ceiling-high-bluebird-table - INFO - Predictive Score - Mean: 0.0, Std: 0.0
+2020-10-16 09:10:13,457 - smallab.main_process_runner - INFO - Experiments: 100%|##########| 1/1 [01:05<00:00, 65.39s/it]
+2020-10-16 09:10:13,458 - smallab.main_process_runner - INFO - Experiments: 100%|##########| 1/1 [01:05<00:00, 65.39s/it]

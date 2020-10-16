@@ -6,10 +6,11 @@ import numpy as np
 x = np.loadtxt('converted_loc.csv', delimiter=',', skiprows=1) # test on very small dataset
 x = np.delete(x, 0, axis=1)
 x = x[:6,:]
-print(x)
+
 wrapper = TsganWrapper(x)
 wrapper.build_dataset(seq_length=3)
 dataX = wrapper.dataX
+# print(dataX)
 print('Dataset is ready.')
 
 specification = {  # just trying out random values for testing
@@ -21,7 +22,8 @@ specification = {  # just trying out random values for testing
 }
 
 wrapper.set_tgan_parameters('iterations', specification['iterations'])
-dataX_hat = wrapper.run_tgan('mytest2_model')
+wrapper.fit('mytest2_model')
+dataX_hat = wrapper.generate()
 
 visualizer = Visualizers(dataX, dataX_hat)
 visualizer.PCA()

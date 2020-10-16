@@ -17,7 +17,7 @@ Outputs
 #%% Necessary Packages
 import tensorflow as tf
 import numpy as np
-
+import logging
 #%% Min Max Normalizer
 
 def MinMaxScaler(dataX):
@@ -33,7 +33,7 @@ def MinMaxScaler(dataX):
 
 #%% Start TGAN function (Input: Original data, Output: Synthetic Data)
 
-def tgan (dataX, parameters, random_generator, model_saved_name='my_model'):
+def tgan (dataX, parameters, random_generator, logger, model_saved_name='my_model'):
   
     # Initialization on the Graph
     tf.reset_default_graph()
@@ -55,7 +55,9 @@ def tgan (dataX, parameters, random_generator, model_saved_name='my_model'):
         Normalization_Flag = 1
     else:
         Normalization_Flag = 0
-     
+    
+    # print(dataX)
+
     # Network Parameters
     hidden_dim   = parameters['hidden_dim'] 
     num_layers   = parameters['num_layers']
@@ -227,11 +229,13 @@ def tgan (dataX, parameters, random_generator, model_saved_name='my_model'):
     saver = tf.train.Saver()
     sess = tf.Session()
     sess.run(tf.global_variables_initializer())
-    saver.save(sess, 'saved_models/test_model') #fix this bug and below
+    saver.save(sess, 'saved_models/'+model_saved_name) #fix this bug and below
 
     #%% Joint Training
-    
-    print('Start Joint Training')
+    if(len(logger)!=0):
+        logging.getLogger(logger).info('Start Joint Training')
+    else:
+        print('Start Joint Training')
     
     # Training step
     for itt in range(iterations):
@@ -277,16 +281,28 @@ def tgan (dataX, parameters, random_generator, model_saved_name='my_model'):
         
         #%% Checkpoints
         if itt % 1000 == 0:
-            print('step: '+ str(itt) + 
-                  ', d_loss: ' + str(np.round(step_d_loss,4)) + 
-                  ', g_loss_u: ' + str(np.round(step_g_loss_u,4)) + 
-                  ', g_loss_s: ' + str(np.round(np.sqrt(step_g_loss_s),4)) + 
-                  ', g_loss_v: ' + str(np.round(step_g_loss_v,4)) + 
-                  ', e_loss_t0: ' + str(np.round(np.sqrt(step_e_loss_t0),4))  )
+            if(len(logger)!=0):
+                logging.getLogger(logger).info('step: '+ str(itt) + 
+                    ', d_loss: ' + str(np.round(step_d_loss,4)) + 
+                    ', g_loss_u: ' + str(np.round(step_g_loss_u,4)) + 
+                    ', g_loss_s: ' + str(np.round(np.sqrt(step_g_loss_s),4)) + 
+                    ', g_loss_v: ' + str(np.round(step_g_loss_v,4)) + 
+                    ', e_loss_t0: ' + str(np.round(np.sqrt(step_e_loss_t0),4))  )
+            else:
+                print('step: '+ str(itt) + 
+                    ', d_loss: ' + str(np.round(step_d_loss,4)) + 
+                    ', g_loss_u: ' + str(np.round(step_g_loss_u,4)) + 
+                    ', g_loss_s: ' + str(np.round(np.sqrt(step_g_loss_s),4)) + 
+                    ', g_loss_v: ' + str(np.round(step_g_loss_v,4)) + 
+                    ', e_loss_t0: ' + str(np.round(np.sqrt(step_e_loss_t0),4))  )
    
     
-    print('Finish Joint Training')
-    
+    # print('Finish Joint Training')
+    if(len(logger)!=0):
+        logging.getLogger(logger).info('Finish Joint Training')
+    else:
+        print('Finish Joint Training')
+
     #%% Final Outputs
     
     Z_mb = random_generator(No, z_dim, dataT, Max_Seq_Len)
@@ -307,6 +323,6 @@ def tgan (dataX, parameters, random_generator, model_saved_name='my_model'):
         dataX_hat = dataX_hat + min_val
 
     # save model as .kcpt
-    saver.save(sess, 'saved_models/test_model')
+    saver.save(sess, 'saved_models/'+model_saved_name)
     
     return dataX_hat

@@ -33,7 +33,7 @@ def PCA_Analysis (dataX, dataX_hat, out_file):
     # Analysis Data Size
     # Sample_No = 1000
     # Sample_No = 200
-    Sample_No = 3 # testing on very small dataset. remember to change back
+    Sample_No = int(len(dataX) * 0.25) # testing on very small dataset. remember to change back
 
     # Data Preprocessing
     for i in range(Sample_No):
@@ -77,7 +77,7 @@ def tSNE_Analysis (dataX, dataX_hat, out_file):
     # Analysis Data Size
     # Sample_No = 1000
     # Sample_No = 200
-    Sample_No = 3 # testing on very small dataset. remember to change back
+    Sample_No = int(len(dataX) * 0.25) # testing on very small dataset. remember to change back
 
     # Preprocess
     for i in range(Sample_No):

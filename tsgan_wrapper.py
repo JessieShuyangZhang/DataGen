@@ -20,7 +20,7 @@ class TsganWrapper(DataGenWrapper):
         self.parameters['hidden_dim'] = 32 
         self.parameters['num_layers'] = 3
         self.parameters['iterations'] = 10 # was 50000 took super long
-        self.parameters['batch_size'] = 2 # changed this to fit smaller datasize 
+        self.parameters['batch_size'] = 32 # changed this to fit smaller datasize 
         self.parameters['module_name'] = 'gru' # Other optios: 'lstm' or 'lstmLN'
         self.parameters['z_dim'] = 8 
 
@@ -47,8 +47,8 @@ class TsganWrapper(DataGenWrapper):
             Z_mb.append(Temp_Z)      
         return Z_mb 
 
-    def fit(self, model_saved_name):
-        self.dataX_hat = tgan(self.dataX, self.parameters, self.noise_generator, model_saved_name)
+    def fit(self, logger, model_saved_name):
+        self.dataX_hat = tgan(self.dataX, self.parameters, self.noise_generator, logger, model_saved_name)
         print('Finish Synthetic Data Generation')
 
     def generate(self):
