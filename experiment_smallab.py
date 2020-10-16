@@ -1,13 +1,16 @@
 import logging
 import typing
-import numpy as np # ??
+import numpy as np
 
 from examples.example_utils import delete_experiments_folder
 from smallab.experiment_types.experiment import Experiment
 from smallab.runner.runner import ExperimentRunner
 from smallab.specification_generator import SpecificationGenerator
+from smallab.runner_implementations.main_process_runner import MainRunner
 
 from tsgan_wrapper import TsganWrapper
+from tsgan_metrics import TsganMetrics 
+from visualizers import Visualizers 
 
 # Same experiment as before
 class TsganExperiment(Experiment):
@@ -18,14 +21,26 @@ class TsganExperiment(Experiment):
         # currently using cashed data from csv file
         x = np.loadtxt('converted_loc.csv', delimiter=',', skiprows=1)
         x = np.delete(x, 0, axis=1)
+        x = x[:6,:] # trying on very small dataset 
         wrapper = TsganWrapper(x)
-        wrapper.build_dataset()
+        wrapper.build_dataset(seq_length=3)
         dataX = wrapper.dataX
         logging.getLogger(self.get_logger_name()).info("Dataset is ready.")
         # print('Dataset is ready.')
 
         wrapper.set_tgan_parameters('iterations', specification['iterations'])
-        results = wrapper.run_tgan(specification['total_iterations'], specification['sub_iterations'], 'with_smallab')
+        wrapper.fit('mytest2_model')
+        dataX_hat = wrapper.generate()
+
+        visualizer = Visualizers(dataX, dataX_hat)
+        visualizer.PCA('small_pca.png')
+        visualizer.tSNE('small_tsne.png')
+
+        metrics = TsganMetrics(dataX, dataX_hat, specification['sub_iterations'])
+        metrics.compute_discriminative()
+        metrics.compute_predictive()
+        results = metrics.mean_std()
+
         logging.getLogger(self.get_logger_name()).info("Result is ready.")
         logging.getLogger(self.get_logger_name()).info(results[0])
         logging.getLogger(self.get_logger_name()).info(results[1])
@@ -37,9 +52,9 @@ class TsganExperiment(Experiment):
 # In the generation specification keys that have lists as their values will be cross producted with other list valued keys to create many specifications
 # in this instance there will be 8 * 3 = 24 specifications
 generation_specification = {  # just trying out random values for testing
-    "total_iterations": [2], 
+    "total_iterations": [1], 
     "sub_iterations": [3],
-    "iterations": [10000], #, 10000, 15000
+    "iterations": [10]  # trying on very little iterations
     # "batch_size": [32, 64, 128],
     # "module_name": ['gru', 'lstm', 'lstmLN']
 }
@@ -48,8 +63,7 @@ generation_specification = {  # just trying out random values for testing
 specifications = SpecificationGenerator().generate(generation_specification)
 print(specifications)
 
-name = "tsgan_experiment"
+name = "tsgan_verysmall_experiment"
 runner = ExperimentRunner()
-runner.run(name, specifications, TsganExperiment())
+runner.run(name, specifications, TsganExperiment(), specification_runner=MainRunner(), propagate_exceptions=True)
 
-delete_experiments_folder(name)
