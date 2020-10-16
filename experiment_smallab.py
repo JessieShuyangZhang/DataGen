@@ -21,7 +21,7 @@ class TsganExperiment(Experiment):
         # currently using cashed data from csv file
         x = np.loadtxt('converted_loc.csv', delimiter=',', skiprows=1)
         x = np.delete(x, 0, axis=1)
-        x = x[:specification["data_size"],:] # trying on 500 data
+        # x = x[:specification["data_size"],:]
         wrapper = TsganWrapper(x)
         seq_length = max(specification["max_seq_length"], int(specification["data_size"]/3))
         wrapper.build_dataset(seq_length)
@@ -29,18 +29,24 @@ class TsganExperiment(Experiment):
         logging.getLogger(self.get_logger_name()).info("Dataset is ready.")
         # print('Dataset is ready.')
 
+        prefix_str = "fulldata_"
+
         wrapper.set_tgan_parameters('iterations', specification['iterations'])
-        wrapper.fit(self.get_logger_name(), '500data_model')
+        wrapper.fit(self.get_logger_name(), prefix_str + 'model')
         dataX_hat = wrapper.generate()
 
         visualizer = Visualizers(dataX, dataX_hat)
-        visualizer.PCA('500data_pca.png')
-        visualizer.tSNE('500data_tsne.png')
+        visualizer.PCA(prefix_str+'pca.png')
+        visualizer.tSNE(prefix_str+'tsne.png')
         logging.getLogger(self.get_logger_name()).info("Visualization complete.")
 
         metrics = TsganMetrics(dataX, dataX_hat, specification['sub_iterations'])
+        logging.getLogger(self.get_logger_name()).info("Computing discriminative score...")
         metrics.compute_discriminative()
+        logging.getLogger(self.get_logger_name()).info("Discriminative score complete.")
+        logging.getLogger(self.get_logger_name()).info("Computing predictive score...")
         metrics.compute_predictive()
+        logging.getLogger(self.get_logger_name()).info("Predictive score complete.")
         results = metrics.mean_std()
 
         logging.getLogger(self.get_logger_name()).info('Discriminative Score - Mean: ' + str(results[0]) + ', Std: ' + str(results[1]))
@@ -53,9 +59,9 @@ class TsganExperiment(Experiment):
 generation_specification = {  # just trying out random values for testing
     # "total_iterations": [1], 
     "sub_iterations": [3],
-    "data_size": [500],
+    "data_size": [965],
     "max_seq_length": [40],
-    "iterations": [10]  # trying on very little iterations
+    "iterations": [10000]  # trying on very little iterations
     # "batch_size": [32, 64, 128],
     # "module_name": ['gru', 'lstm', 'lstmLN']
 }
@@ -64,7 +70,7 @@ generation_specification = {  # just trying out random values for testing
 specifications = SpecificationGenerator().generate(generation_specification)
 print(specifications)
 
-name = "tsgan_500data_experiment"
+name = "tsgan_fulldata_experiment"
 runner = ExperimentRunner()
 runner.run(name, specifications, TsganExperiment(), specification_runner=MainRunner(), propagate_exceptions=True)
 

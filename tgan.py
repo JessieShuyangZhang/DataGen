@@ -229,7 +229,7 @@ def tgan (dataX, parameters, random_generator, logger, model_saved_name='my_mode
     saver = tf.train.Saver()
     sess = tf.Session()
     sess.run(tf.global_variables_initializer())
-    saver.save(sess, 'saved_models/'+model_saved_name) #fix this bug and below
+    saver.save(sess, 'saved_models/'+model_saved_name+'/'+model_saved_name)
 
     #%% Joint Training
     if(len(logger)!=0):
@@ -322,7 +322,7 @@ def tgan (dataX, parameters, random_generator, logger, model_saved_name='my_mode
         dataX_hat = dataX_hat * max_val
         dataX_hat = dataX_hat + min_val
 
-    # save model as .kcpt
-    saver.save(sess, 'saved_models/'+model_saved_name)
+    # save model
+    saver.save(sess, 'saved_models/'+model_saved_name+'/'+model_saved_name)
     
     return dataX_hat
