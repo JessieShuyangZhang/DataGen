@@ -1,1 +1,0 @@
-{"specification": {"data_size": 100, "iterations": 10, "max_seq_length": 40, "sub_iterations": 3, "total_iterations": 1}, "result": {"discriminative score mean": 0.0, "predictive score mean": 0.0}}

@@ -1,7 +1,0 @@
-2020-10-16 09:24:34,449 - smallab.main_process_runner - INFO - Experiments:   0%|          | 0/1 [00:00<?, ?it/s]
-2020-10-16 09:24:34,460 - smallab.lamp-twenty-finch-moon - INFO - Dataset is ready.
-2020-10-16 09:24:59,105 - smallab.lamp-twenty-finch-moon - INFO - Visualization complete.
-2020-10-16 09:31:07,880 - smallab.lamp-twenty-finch-moon - INFO - Discriminative Score - Mean: 0.0, Std: 0.0
-2020-10-16 09:31:07,882 - smallab.lamp-twenty-finch-moon - INFO - Predictive Score - Mean: 0.0, Std: 0.0
-2020-10-16 09:31:07,884 - smallab.main_process_runner - INFO - Experiments: 100%|##########| 1/1 [06:33<00:00, 393.43s/it]
-2020-10-16 09:31:07,884 - smallab.main_process_runner - INFO - Experiments: 100%|##########| 1/1 [06:33<00:00, 393.43s/it]
