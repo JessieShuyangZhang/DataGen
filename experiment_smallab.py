@@ -23,7 +23,7 @@ class TsganExperiment(Experiment):
         x = np.delete(x, 0, axis=1)
         # x = x[:specification["data_size"],:]
         wrapper = TsganWrapper(x)
-        seq_length = max(specification["max_seq_length"], int(specification["data_size"]/3))
+        seq_length = min(specification["max_seq_length"], int(specification["data_size"]/3))
         wrapper.build_dataset(seq_length)
         dataX = wrapper.dataX
         logging.getLogger(self.get_logger_name()).info("Dataset is ready.")
