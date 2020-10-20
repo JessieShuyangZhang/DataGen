@@ -155,6 +155,7 @@ def discriminative_score_metrics (dataX, dataX_hat):
     
     #%% Accuracy
     Acc = accuracy_score(Y_label_final, Y_pred_final>0.5)
+    print('*discriminative_score_metrics*', Acc) #for debugging
     
     Disc_Score = np.abs(0.5-Acc)
     

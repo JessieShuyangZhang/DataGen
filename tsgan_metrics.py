@@ -9,20 +9,18 @@ class TsganMetrics:
         self.dataX = dataX
         self.dataX_hat = dataX_hat
         self.sub_iterations = sub_iterations
-        self.discriminative_score = []
-        self.predictive_score = []
+        self.discriminative_score = list()
+        self.predictive_score = list()
 
     def compute_discriminative(self):
-        acc = list()
         for tt in range(self.sub_iterations):
-            acc.append(discriminative_score_metrics(self.dataX, self.dataX_hat))
-        self.discriminative_score.append(np.mean(acc))
+            self.discriminative_score.append(discriminative_score_metrics(self.dataX, self.dataX_hat))
+        print('*acc_array*',self.discriminative_score)
 
     def compute_predictive(self):
-        MAE_All = list()
         for tt in range(self.sub_iterations):
-            MAE_All.append(predictive_score_metrics(self.dataX, self.dataX_hat))
-        self.predictive_score.append(np.mean(MAE_All))
+            self.predictive_score.append(predictive_score_metrics(self.dataX, self.dataX_hat))
+        print('*MIE_array*',self.predictive_score)
     
     def mean_std(self):
         disc_mean = np.round(np.mean(self.discriminative_score),4)
