@@ -74,7 +74,15 @@ def tgan (dataX, parameters, random_generator, logger='', model_saved_name='my_m
     module_name  = parameters['module_name']    # 'lstm' or 'lstmLN'
     z_dim        = parameters['z_dim']
     gamma        = 1
-    
+
+    dataX_len_saved = tf.Variable(No, name="dataX_len")
+    z_dim_saved = tf.Variable(z_dim, name="z_dimension")
+    dataX_saved = tf.Variable(dataX, name="dataX")
+    dataT_saved = tf.Variable(dataT, name="dataT")
+    Max_Seq_Len_saved = tf.Variable(Max_Seq_Len, name="Max_Seq_Len")
+    print('dataT_saved', dataT_saved)
+    print('Max_Seq_Len_saved', Max_Seq_Len_saved)
+
     #%% input place holders
     
     X = tf.placeholder(tf.float32, [None, Max_Seq_Len, data_dim], name = "myinput_x")

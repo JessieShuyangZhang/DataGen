@@ -10,11 +10,11 @@ class DataGenWrapper(ABC):
     def generate(self, *args, **kwargs): # return synthetic data
         pass
 
+    def load_model(self, filename):
+        pass
+
     # not implemented in child class yet:
 
     # def save_model(self, filename):
     #     pass
 
-    # def load_model(self, filename):
-    #     pass
-    
