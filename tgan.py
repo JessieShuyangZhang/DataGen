@@ -33,7 +33,7 @@ def MinMaxScaler(dataX):
 
 #%% Start TGAN function (Input: Original data, Output: Synthetic Data)
 
-def tgan (dataX, parameters, random_generator, logger, model_saved_name='my_model'):
+def tgan (dataX, parameters, random_generator, logger='', model_saved_name='my_model'):
   
     # Initialization on the Graph
     tf.reset_default_graph()
@@ -90,70 +90,45 @@ def tgan (dataX, parameters, random_generator, logger, model_saved_name='my_mode
         
     #%% build a RNN embedding network      
     
-    def embedder (X, T):      
-      
-        with tf.variable_scope("embedder", reuse = tf.AUTO_REUSE):
-            
-            e_cell = tf.nn.rnn_cell.MultiRNNCell([rnn_cell(module_name) for _ in range(num_layers)])
-                
-            e_outputs, e_last_states = tf.nn.dynamic_rnn(e_cell, X, dtype=tf.float32, sequence_length = T)
-            
+    def embedder (X, T):
+        with tf.variable_scope("embedder", reuse = tf.AUTO_REUSE):            
+            e_cell = tf.nn.rnn_cell.MultiRNNCell([rnn_cell(module_name) for _ in range(num_layers)])                
+            e_outputs, e_last_states = tf.nn.dynamic_rnn(e_cell, X, dtype=tf.float32, sequence_length = T)            
             H = tf.contrib.layers.fully_connected(e_outputs, hidden_dim, activation_fn=tf.nn.sigmoid)     
-
         return H
       
     ##### Recovery
     
-    def recovery (H, T):      
-      
-        with tf.variable_scope("recovery", reuse = tf.AUTO_REUSE):       
-              
-            r_cell = tf.nn.rnn_cell.MultiRNNCell([rnn_cell(module_name) for _ in range(num_layers)])
-                
-            r_outputs, r_last_states = tf.nn.dynamic_rnn(r_cell, H, dtype=tf.float32, sequence_length = T)
-            
-            X_tilde = tf.contrib.layers.fully_connected(r_outputs, data_dim, activation_fn=tf.nn.sigmoid) 
-
+    def recovery (H, T):       
+        with tf.variable_scope("recovery", reuse = tf.AUTO_REUSE):                     
+            r_cell = tf.nn.rnn_cell.MultiRNNCell([rnn_cell(module_name) for _ in range(num_layers)])                
+            r_outputs, r_last_states = tf.nn.dynamic_rnn(r_cell, H, dtype=tf.float32, sequence_length = T)            
+            X_tilde = tf.contrib.layers.fully_connected(r_outputs, data_dim, activation_fn=tf.nn.sigmoid,) 
         return X_tilde
 
     #%% build a RNN generator network
     
     def generator (Z, T):      
-      
         with tf.variable_scope("generator", reuse = tf.AUTO_REUSE):
-            
             e_cell = tf.nn.rnn_cell.MultiRNNCell([rnn_cell(module_name) for _ in range(num_layers)])
-                
             e_outputs, e_last_states = tf.nn.dynamic_rnn(e_cell, Z, dtype=tf.float32, sequence_length = T)
-            
             E = tf.contrib.layers.fully_connected(e_outputs, hidden_dim, activation_fn=tf.nn.sigmoid)     
-
         return E
       
-    def supervisor (H, T):      
-      
-        with tf.variable_scope("supervisor", reuse = tf.AUTO_REUSE):
-            
-            e_cell = tf.nn.rnn_cell.MultiRNNCell([rnn_cell(module_name) for _ in range(num_layers-1)])
-                
-            e_outputs, e_last_states = tf.nn.dynamic_rnn(e_cell, H, dtype=tf.float32, sequence_length = T)
-            
+    def supervisor (H, T):           
+        with tf.variable_scope("supervisor", reuse = tf.AUTO_REUSE):            
+            e_cell = tf.nn.rnn_cell.MultiRNNCell([rnn_cell(module_name) for _ in range(num_layers-1)])                
+            e_outputs, e_last_states = tf.nn.dynamic_rnn(e_cell, H, dtype=tf.float32, sequence_length = T)            
             S = tf.contrib.layers.fully_connected(e_outputs, hidden_dim, activation_fn=tf.nn.sigmoid)     
-
         return S
       
     #%% builde a RNN discriminator network 
     
-    def discriminator (H, T):
-      
-        with tf.variable_scope("discriminator", reuse = tf.AUTO_REUSE):
-            
-            d_cell = tf.nn.rnn_cell.MultiRNNCell([rnn_cell(module_name) for _ in range(num_layers)])
-                
-            d_outputs, d_last_states = tf.nn.dynamic_rnn(d_cell, H, dtype=tf.float32, sequence_length = T)
-            
-            Y_hat = tf.contrib.layers.fully_connected(d_outputs, 1, activation_fn=None) 
-    
+    def discriminator (H, T):      
+        with tf.variable_scope("discriminator", reuse = tf.AUTO_REUSE):            
+            d_cell = tf.nn.rnn_cell.MultiRNNCell([rnn_cell(module_name) for _ in range(num_layers)])                
+            d_outputs, d_last_states = tf.nn.dynamic_rnn(d_cell, H, dtype=tf.float32, sequence_length = T)            
+            Y_hat = tf.contrib.layers.fully_connected(d_outputs, 1, activation_fn=None)     
         return Y_hat   
     
     # original place of random_generator
@@ -171,6 +146,7 @@ def tgan (dataX, parameters, random_generator, logger, model_saved_name='my_mode
     
     # Synthetic data
     X_hat = recovery(H_hat, T)
+    print(X_hat.name)
     
     # Discriminator
     Y_fake = discriminator(H_hat, T)
@@ -199,6 +175,7 @@ def tgan (dataX, parameters, random_generator, logger, model_saved_name='my_mode
     G_loss_S = tf.losses.mean_squared_error(H[:,1:,:], H_hat_supervise[:,1:,:])
     
     # 3. Two Momments
+    # does these two operations change X_hat?
     G_loss_V1 = tf.reduce_mean(np.abs(tf.sqrt(tf.nn.moments(X_hat,[0])[1] + 1e-6) - tf.sqrt(tf.nn.moments(X,[0])[1] + 1e-6)))
     G_loss_V2 = tf.reduce_mean(np.abs((tf.nn.moments(X_hat,[0])[0]) - (tf.nn.moments(X,[0])[0])))
     
@@ -307,7 +284,7 @@ def tgan (dataX, parameters, random_generator, logger, model_saved_name='my_mode
     
     Z_mb = random_generator(No, z_dim, dataT, Max_Seq_Len)
     
-    X_hat_curr = sess.run(X_hat, feed_dict={Z: Z_mb, X: dataX, T: dataT})    
+    X_hat_curr = sess.run(X_hat, feed_dict={Z: Z_mb, X: dataX, T: dataT})
     
     #%% List of the final outputs
     
