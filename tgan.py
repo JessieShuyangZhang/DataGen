@@ -18,6 +18,14 @@ Outputs
 import tensorflow as tf
 import numpy as np
 import logging
+
+def log_or_print(logger, text):
+    if(len(logger)!=0):
+        logging.getLogger(logger).info(text)
+    else:
+        print(text)
+
+
 #%% Min Max Normalizer
 
 def MinMaxScaler(dataX):
@@ -209,10 +217,7 @@ def tgan (dataX, parameters, random_generator, logger='', model_saved_name='my_m
     saver.save(sess, 'saved_models/'+model_saved_name+'/'+model_saved_name)
 
     #%% Joint Training
-    if(len(logger)!=0):
-        logging.getLogger(logger).info('Start Joint Training')
-    else:
-        print('Start Joint Training')
+    log_or_print(logger, 'Start Joint Training')
     
     # Training step
     for itt in range(iterations):
@@ -258,27 +263,15 @@ def tgan (dataX, parameters, random_generator, logger='', model_saved_name='my_m
         
         #%% Checkpoints
         if itt % 1000 == 0:
-            if(len(logger)!=0):
-                logging.getLogger(logger).info('step: '+ str(itt) + 
-                    ', d_loss: ' + str(np.round(step_d_loss,4)) + 
-                    ', g_loss_u: ' + str(np.round(step_g_loss_u,4)) + 
-                    ', g_loss_s: ' + str(np.round(np.sqrt(step_g_loss_s),4)) + 
-                    ', g_loss_v: ' + str(np.round(step_g_loss_v,4)) + 
-                    ', e_loss_t0: ' + str(np.round(np.sqrt(step_e_loss_t0),4))  )
-            else:
-                print('step: '+ str(itt) + 
-                    ', d_loss: ' + str(np.round(step_d_loss,4)) + 
-                    ', g_loss_u: ' + str(np.round(step_g_loss_u,4)) + 
-                    ', g_loss_s: ' + str(np.round(np.sqrt(step_g_loss_s),4)) + 
-                    ', g_loss_v: ' + str(np.round(step_g_loss_v,4)) + 
-                    ', e_loss_t0: ' + str(np.round(np.sqrt(step_e_loss_t0),4))  )
+            log_or_print(logger,'step: '+ str(itt) + 
+                ', d_loss: ' + str(np.round(step_d_loss,4)) + 
+                ', g_loss_u: ' + str(np.round(step_g_loss_u,4)) + 
+                ', g_loss_s: ' + str(np.round(np.sqrt(step_g_loss_s),4)) + 
+                ', g_loss_v: ' + str(np.round(step_g_loss_v,4)) + 
+                ', e_loss_t0: ' + str(np.round(np.sqrt(step_e_loss_t0),4))  )
    
     
-    # print('Finish Joint Training')
-    if(len(logger)!=0):
-        logging.getLogger(logger).info('Finish Joint Training')
-    else:
-        print('Finish Joint Training')
+    log_or_print(logger, 'Finish Joint Training')
 
     #%% Final Outputs
     
