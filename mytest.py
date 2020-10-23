@@ -1,3 +1,5 @@
+# Don't run this file. It's just a bunch of scratch
+
 # try to restore the model: mytest2_model 
 # import numpy as np
 
@@ -60,3 +62,42 @@ min_val = np.min(np.min(dataX, axis = 0), axis = 0)
 max_val = np.max(np.max(dataX, axis = 0), axis = 0)
 dataX_hat = dataX_hat * max_val
 dataX_hat = dataX_hat + min_val
+
+
+
+
+
+
+
+
+
+
+# testing workability of discriminative_score_metrics
+
+import sys
+sys.path.append('metrics')
+from discriminative_score_metrics import discriminative_score_metrics
+import numpy as np
+# dataX_hat=np.array([[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]],[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]]])
+dataX_hat=np.array([[[1,1,0,1,0],[1,1,0,1,1],[0,0,0,1,0]],[[1,1,0,1,1],[0,0,0,0,0],[1,1,0,1,1]],[[1,1,1,1,1],[0,0,0,0,0],[1,0,0,1,1]]])
+
+# dataX=np.array([[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]])
+dataX=np.array([[[1,1,0,1,0],[1,1,1,1,1],[0,0,0,1,0]],[[1,1,1,1,1],[0,0,0,0,0],[1,1,0,1,1]],[[1,1,1,1,1],[0,0,0,0,0],[1,0,0,1,1]]])
+disc_score=discriminative_score_metrics(dataX, dataX_hat)
+
+print(disc_score)
+
+
+
+
+
+
+
+
+# load data once more
+from data_loader import DataLoader
+dl = DataLoader(csv_filename='conv_loc_time.csv')
+dl.load_raw_data()
+dl.convert_location()
+dl.convert_time()
+dl.output_csv()

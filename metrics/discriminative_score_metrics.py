@@ -153,9 +153,10 @@ def discriminative_score_metrics (dataX, dataX_hat):
     Y_pred_final = np.squeeze(np.concatenate((Y_pred_real_curr, Y_pred_fake_curr), axis = 0))
     Y_label_final = np.concatenate((np.ones([len(Y_pred_real_curr),]), np.zeros([len(Y_pred_real_curr),])), axis = 0)
     
-    #%% Accuracy
+    #%% Accuracy: if 
+    # Acc = accuracy_score(Y_label_final, Y_pred_final>0.5)
     Acc = accuracy_score(Y_label_final, Y_pred_final>0.5)
-    print('*discriminative_score_metrics*', Acc) #for debugging
+    print('*discriminative_score_metrics*', Acc) # if Acc=0.5, data identical, hard to distinguish; if Acc=1, completely different, easy to distinguish
     
     Disc_Score = np.abs(0.5-Acc)
     

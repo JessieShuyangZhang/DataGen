@@ -5,7 +5,7 @@ import csv
 import math
 
 class DataLoader: 
-    def __init__(self, csv_filename='raw_data.csv', data_path='../../../../media/raid/jessiezhang/noaa-data.db'):
+    def __init__(self, csv_filename='raw_data.csv', data_path='../../noaa-data.db'):
         '''
         load raw data from noaa database. converts location from lon-lat into x-y coords
         @type data_path: string
@@ -86,12 +86,25 @@ class DataLoader:
 
         print("Done converting location") 
 
+    def convert_time(self): # let first row's time be base time t0, subtract it from all subsequent rows
+        if not self.raw_data:
+            self.load_raw_data()
+        t0 = self.raw_data[0][1]
+        for i in range(len(self.raw_data)):
+            self.raw_data[i][1] -= t0
+        
+        print("Done converting time")
+        
+
     def output_csv(self):     #not necessary, might make it slower. just load the data from the array
         if not self.raw_data:
             self.load_raw_data()
-        with open(self.csv_filename, 'wb') as csvfile:
-            csv_out = csv.writer(csvfile)
-            csv_out.writerow(['postion_key','unix_time','latitude','longitude','depth','conductivity','density','temperature','salinity'])
-            csv_out.writerows(self.raw_data)
+        # with open(self.csv_filename, 'wb') as csvfile:
+        #     csv_out = csv.writer(csvfile)
+        #     csv_out.writerow(['postion_key','unix_time','latitude','longitude','depth','conductivity','density','temperature','salinity'])
+        #     csv_out.writerows(self.raw_data)
+
+        a = np.asarray(self.raw_data)
+        np.savetxt(self.csv_filename, a, delimiter=",")
 
         print("done with csv")

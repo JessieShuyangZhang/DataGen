@@ -2,6 +2,7 @@ import numpy as np
 from tgan import tgan
 import tensorflow as tf
 from datagen_wrapper import DataGenWrapper
+import pdb 
 
 class TsganWrapper(DataGenWrapper):
     '''
@@ -9,7 +10,7 @@ class TsganWrapper(DataGenWrapper):
     try feeding the pretrained(saved) model some noisy data and generate synthetic data
     '''
     def __init__(self, raw_data):
-        self.raw_data = raw_data
+        self.raw_data = np.copy(raw_data)
         self.dataX = [] # original data
         self.dataX_hat = [] # synthetic data
         self.parameters = dict() # network parameters
@@ -26,10 +27,14 @@ class TsganWrapper(DataGenWrapper):
         self.dataX = []
         # slice data into time series sequences 
         for i in range(len(self.raw_data) - seq_length):
-            _x = self.raw_data[i:i+seq_length]
+            # pdb.set_trace()
+            _x = np.copy(self.raw_data[i:i+seq_length])
+            t0 = _x[0][0]
+            for i in range(len(_x)): # make the first row in the sequence be t0 = 0
+                _x[i][0] -= t0
             self.dataX.append(_x)
         # Mix Data (to make it similar to i.i.d)
-        np.random.shuffle(self.dataX)
+        np.random.shuffle(self.dataX) # why would this make the first element 0 ??
 
     def set_tgan_parameters(self, param_name, value):  # can tune network parameter through param_name
         if(param_name in self.parameters):
