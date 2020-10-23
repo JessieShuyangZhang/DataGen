@@ -17,9 +17,10 @@ class TsganMetrics:
         #     self.discriminative_score.append(discriminative_score_metrics(dataX, dataX_hat))
         # print('*acc_array*',self.discriminative_score)
         
+        dataX_hat_cp = dataX_hat[:len(dataX)]
         acc = list()
         for tt in range(self.sub_iterations):
-            acc.append(discriminative_score_metrics(dataX, dataX_hat))
+            acc.append(discriminative_score_metrics(dataX, dataX_hat_cp))
         self.discriminative_score.append(np.mean(acc))
         
 
@@ -27,10 +28,10 @@ class TsganMetrics:
         # for tt in range(self.sub_iterations):
         #     self.predictive_score.append(predictive_score_metrics(dataX, dataX_hat))
         # print('*MAE_array*',self.predictive_score)
-        
+        dataX_hat_cp = dataX_hat[:len(dataX)]
         MAE_ALL = list()
         for tt in range(self.sub_iterations):
-            MAE_ALL.append(predictive_score_metrics(dataX, dataX_hat))
+            MAE_ALL.append(predictive_score_metrics(dataX, dataX_hat_cp))
         self.predictive_score.append(np.mean(MAE_ALL))
         
     

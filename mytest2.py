@@ -2,6 +2,7 @@ from tsgan_wrapper import TsganWrapper
 from tsgan_metrics import TsganMetrics 
 from visualizers import Visualizers 
 import numpy as np
+import pdb 
 
 x = np.loadtxt('conv_loc_time.csv', delimiter=',') #, skiprows=1   test on very small dataset
 x = np.delete(x, 0, axis=1)
@@ -13,9 +14,17 @@ dataX = wrapper.dataX
 # print(dataX)
 print('Dataset is ready.')
 
+# buidling unseen dataX for discriminative score evaluation
+unseen = np.loadtxt('unseen_dataX.csv', delimiter=',')
+unseen = np.delete(unseen, 0, axis=1)
+unseen_wrap = TsganWrapper(unseen)
+unseen_wrap.build_dataset()
+dataX_disctest = unseen_wrap.dataX
+
+
 specification = {  # just trying out random values for testing
     "total_iterations": 1, 
-    "sub_iterations": 3,
+    "sub_iterations": 2,
     "iterations": 10,  # trying on very little iterations
     "batch_size": 128, # 32, 64, 
     # "module_name": ['gru', 'lstm', 'lstmLN']
@@ -34,10 +43,16 @@ metrics = TsganMetrics(specification['sub_iterations'])
 for it in range(specification['total_iterations']):
     wrapper.fit(filename=prefix_str+'model')
     dataX_hat = wrapper.generate()
+    
+    pdb.set_trace()
+    # print(dataX.shape)
+    # print(dataX_hat.shape)
+    # print(dataX_disctest.shape)
+
     print("computing discriminative")
-    metrics.compute_discriminative(dataX, dataX_hat)
+    metrics.compute_discriminative(dataX_disctest, dataX_hat)
     print("computing predictive")
-    metrics.compute_predictive(dataX, dataX_hat)
+    metrics.compute_predictive(dataX_disctest, dataX_hat)
 
 results = metrics.mean_std()
 visualizer = Visualizers(dataX, dataX_hat)

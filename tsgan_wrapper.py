@@ -2,7 +2,6 @@ import numpy as np
 from tgan import tgan
 import tensorflow as tf
 from datagen_wrapper import DataGenWrapper
-import pdb 
 
 class TsganWrapper(DataGenWrapper):
     '''
@@ -23,18 +22,17 @@ class TsganWrapper(DataGenWrapper):
         self.parameters['module_name'] = 'gru' # Other optios: 'lstm' or 'lstmLN'
         self.parameters['z_dim'] = 8 
 
-    def build_dataset(self, seq_length=40):  # can tune seq_length
+    def build_dataset(self, seq_length=100):  # can tune seq_length
         self.dataX = []
         # slice data into time series sequences 
-        for i in range(len(self.raw_data) - seq_length):
-            # pdb.set_trace()
+        for i in range(len(self.raw_data) - seq_length):            
             _x = np.copy(self.raw_data[i:i+seq_length])
             t0 = _x[0][0]
             for i in range(len(_x)): # make the first row in the sequence be t0 = 0
                 _x[i][0] -= t0
             self.dataX.append(_x)
         # Mix Data (to make it similar to i.i.d)
-        np.random.shuffle(self.dataX) # why would this make the first element 0 ??
+        np.random.shuffle(self.dataX)
 
     def set_tgan_parameters(self, param_name, value):  # can tune network parameter through param_name
         if(param_name in self.parameters):

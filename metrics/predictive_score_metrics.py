@@ -95,15 +95,17 @@ def predictive_score_metrics (dataX, dataX_hat):
         train_idx = idx[:batch_size]     
             
         X_mb = list(dataX_hat[i][:-1,:(data_dim-1)] for i in train_idx)
+        # X_mb = list(dataX_hat[i][:-1][:(data_dim-1)] for i in train_idx)
         T_mb = list(dataT[i]-1 for i in train_idx)
         Y_mb = list(np.reshape(dataX_hat[i][1:,(data_dim-1)],[len(dataX_hat[i][1:,(data_dim-1)]),1]) for i in train_idx)        
-          
+        # Y_mb = list(np.reshape(dataX_hat[i][1:][(data_dim-1)],[len(dataX_hat[i][1:][(data_dim-1)]),1]) for i in train_idx)        
+
         # Train discriminator
         _, step_d_loss = sess.run([D_solver, D_loss], feed_dict={X: X_mb, T: T_mb, Y: Y_mb})            
         
         #%% Checkpoints
-#        if itt % 500 == 0:
-#            print("[step: {}] loss - d loss: {}".format(itt, np.sqrt(np.round(step_d_loss,4))))
+        if itt % 500 == 0:
+            print("[step: {}] loss - d loss: {}".format(itt, np.sqrt(np.round(step_d_loss,4))))
     
     #%% Use Original Dataset to test
     

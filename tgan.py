@@ -29,7 +29,6 @@ def log_or_print(logger, text):
 #%% Min Max Normalizer
 
 def MinMaxScaler(dataX):
-    
     min_val = np.min(np.min(dataX, axis = 0), axis = 0)
     dataX = dataX - min_val
     
@@ -80,8 +79,8 @@ def tgan (dataX, parameters, random_generator, logger='', model_saved_name='my_m
     dataX_saved = tf.Variable(dataX, name="dataX")
     dataT_saved = tf.Variable(dataT, name="dataT")
     Max_Seq_Len_saved = tf.Variable(Max_Seq_Len, name="Max_Seq_Len")
-    print('dataT_saved', dataT_saved)
-    print('Max_Seq_Len_saved', Max_Seq_Len_saved)
+    # print('dataT_saved', dataT_saved)
+    # print('Max_Seq_Len_saved', Max_Seq_Len_saved)
 
     #%% input place holders
     
@@ -162,7 +161,7 @@ def tgan (dataX, parameters, random_generator, logger='', model_saved_name='my_m
     
     # Synthetic data
     X_hat = recovery(H_hat, T)
-    print(X_hat.name)
+    # print(X_hat.name)
     
     # Discriminator
     Y_fake = discriminator(H_hat, T)

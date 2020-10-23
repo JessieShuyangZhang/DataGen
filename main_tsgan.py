@@ -50,11 +50,11 @@ from predictive_score_metrics import predictive_score_metrics
 #%% Main Parameters
 # Experiments iterations
 Iteration = 1 # was 2
-Sub_Iteration = 3
+Sub_Iteration = 2
 
 #%% Data Loading
 # using cashed dataset with seq_length=40
-x = np.loadtxt('converted_loc.csv', delimiter=',', skiprows=1)
+x = np.loadtxt('conv_loc_time.csv', delimiter=',') #, skiprows=1
 wrapper = TsganWrapper(x)
 wrapper.build_dataset()
 dataX = wrapper.dataX
@@ -64,7 +64,7 @@ print('Dataset is ready.')
 parameters = dict()
 parameters['hidden_dim'] = len(dataX[0][0,:]) * 4
 parameters['num_layers'] = 3
-parameters['iterations'] = 10000 # was 50000 took super long
+parameters['iterations'] = 10 # was 50000 took super long
 parameters['batch_size'] = 128
 parameters['module_name'] = 'gru'   # Other options: 'lstm' or 'lstmLN'
 parameters['z_dim'] = len(dataX[0][0,:])
@@ -79,7 +79,8 @@ Predictive_Score = list()
 for it in range(Iteration):
 
     # Synthetic Data Generation
-    dataX_hat = tgan(dataX, parameters)
+    wrapper.fit(filename='debug_predictive')
+    dataX_hat = wrapper.generate()
 
     print('Finish Synthetic Data Generation')
 
@@ -104,8 +105,8 @@ print('Finish TGAN iterations')
 
 
 #%% 3. Visualization
-PCA_Analysis (dataX, dataX_hat)
-tSNE_Analysis (dataX, dataX_hat)
+PCA_Analysis (dataX, dataX_hat,"delete.png")
+tSNE_Analysis (dataX, dataX_hat, "delete.png")
 
 # Print Results
 print('Discriminative Score - Mean: ' + str(np.round(np.mean(Discriminative_Score),4)) + ', Std: ' + str(np.round(np.std(Discriminative_Score),4)))

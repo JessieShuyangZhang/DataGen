@@ -26,7 +26,22 @@ class DataLoader:
         cursor = connector.cursor()
         # all locations are from "Gulf of Mexico"
         # cursor.execute("SELECT position_key,time_of_day,latitude,longitude,depth FROM position WHERE position_key%100=0 AND position_key<=100000 ORDER BY time_of_day ASC")
-        cursor.execute("SELECT p.position_key,p.time_of_day,p.latitude,p.longitude,p.depth FROM position p, robots r WHERE p.robot_key=r.robot_key AND p.position_key%100=0 AND p.position_key<=100000 AND r.location='Gulf of Mexico' ORDER BY p.time_of_day ASC")
+        # cursor.execute("""SELECT p.position_key,p.time_of_day,p.latitude,p.longitude,p.depth 
+        #                 FROM position p, robots r 
+        #                 WHERE p.robot_key=r.robot_key 
+        #                 AND p.position_key%100=0 
+        #                 AND p.position_key<=100000 
+        #                 AND r.location='Gulf of Mexico' 
+        #                 ORDER BY p.time_of_day ASC""")
+
+        cursor.execute("""SELECT p.position_key,p.time_of_day,p.latitude,p.longitude,p.depth 
+                        FROM position p, robots r 
+                        WHERE p.robot_key=r.robot_key 
+                        AND p.position_key%100=0 
+                        AND p.position_key>100000 
+                        AND p.position_key<=200000 
+                        AND r.location='Gulf of Mexico' 
+                        ORDER BY p.time_of_day ASC""")
         result = cursor.fetchall()
         
         # trim the data, remove when time difference with the next is less than 10 minutes
