@@ -1,0 +1,17 @@
+2020-10-27 01:12:47,391 - smallab.main_process_runner - INFO - Experiments:   0%|          | 0/1 [00:00<?, ?it/s]
+2020-10-27 01:12:47,427 - smallab.princess-twenty-two-bravo - INFO - Dataset is ready.
+2020-10-27 01:12:59,326 - smallab.princess-twenty-two-bravo - INFO - Start Joint Training
+2020-10-27 01:13:04,242 - smallab.princess-twenty-two-bravo - INFO - step: 0, d_loss: 2.1184, g_loss_u: 0.66, g_loss_s: 0.07, g_loss_v: 0.3975, e_loss_t0: 0.324
+2020-10-27 01:16:48,317 - smallab.princess-twenty-two-bravo - INFO - step: 1000, d_loss: 1.3236, g_loss_u: 2.2493, g_loss_s: 0.0128, g_loss_v: 0.036, e_loss_t0: 0.0368
+2020-10-27 01:20:30,108 - smallab.princess-twenty-two-bravo - INFO - step: 2000, d_loss: 1.2828, g_loss_u: 2.2213, g_loss_s: 0.0205, g_loss_v: 0.0504, e_loss_t0: 0.0314
+2020-10-27 01:24:13,601 - smallab.princess-twenty-two-bravo - INFO - step: 3000, d_loss: 1.4714, g_loss_u: 1.5818, g_loss_s: 0.0197, g_loss_v: 0.0339, e_loss_t0: 0.0191
+2020-10-27 01:27:51,889 - smallab.princess-twenty-two-bravo - INFO - step: 4000, d_loss: 1.5857, g_loss_u: 1.5847, g_loss_s: 0.0145, g_loss_v: 0.0937, e_loss_t0: 0.0138
+2020-10-27 01:31:25,533 - smallab.princess-twenty-two-bravo - INFO - step: 5000, d_loss: 1.5793, g_loss_u: 1.6826, g_loss_s: 0.0117, g_loss_v: 0.0394, e_loss_t0: 0.0114
+2020-10-27 01:35:01,673 - smallab.princess-twenty-two-bravo - INFO - step: 6000, d_loss: 1.5365, g_loss_u: 1.2294, g_loss_s: 0.011, g_loss_v: 0.0596, e_loss_t0: 0.0113
+2020-10-27 01:39:37,287 - smallab.princess-twenty-two-bravo - INFO - step: 7000, d_loss: 1.536, g_loss_u: 1.5048, g_loss_s: 0.0126, g_loss_v: 0.0304, e_loss_t0: 0.0094
+2020-10-27 01:43:58,226 - smallab.princess-twenty-two-bravo - INFO - step: 8000, d_loss: 1.5798, g_loss_u: 1.5074, g_loss_s: 0.0135, g_loss_v: 0.0353, e_loss_t0: 0.0085
+2020-10-27 01:48:03,601 - smallab.princess-twenty-two-bravo - INFO - step: 9000, d_loss: 1.5895, g_loss_u: 1.446, g_loss_s: 0.014, g_loss_v: 0.0378, e_loss_t0: 0.0081
+2020-10-27 01:52:21,300 - smallab.princess-twenty-two-bravo - INFO - step: 10000, d_loss: 1.6255, g_loss_u: 1.3275, g_loss_s: 0.0102, g_loss_v: 0.0457, e_loss_t0: 0.0075
+2020-10-27 01:52:21,301 - smallab.princess-twenty-two-bravo - INFO - Finish Joint Training
+2020-10-27 01:52:22,510 - smallab.princess-twenty-two-bravo - INFO - Computing discriminative score...
+2020-10-27 01:52:22,511 - smallab.main_process_runner - INFO - Experiments:   0%|          | 0/1 [39:35<?, ?it/s]

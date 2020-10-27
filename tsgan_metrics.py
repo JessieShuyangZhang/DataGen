@@ -17,8 +17,7 @@ class TsganMetrics:
 
         acc = list()
         for tt in range(self.sub_iterations):
-            acc.append(discriminative_score_metrics(dataX, dataX_hat_cp))
-        self.discriminative_score.append(np.mean(acc))
+            self.discriminative_score.append(discriminative_score_metrics(dataX, dataX_hat))
         
 
     def compute_predictive(self, dataX, dataX_hat):
@@ -26,10 +25,8 @@ class TsganMetrics:
             len(dataX) == len(dataX_hat)
         ), f"original and synthetic data have different length"
 
-        MAE_ALL = list()
         for tt in range(self.sub_iterations):
-            MAE_ALL.append(predictive_score_metrics(dataX, dataX_hat_cp))
-        self.predictive_score.append(np.mean(MAE_ALL))
+            self.predictive_score.append(predictive_score_metrics(dataX, dataX_hat))
         
     
     def mean_std(self):

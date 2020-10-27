@@ -122,3 +122,27 @@ print(pred_score)
 
 '''
 
+# restore saved model to compute metrics
+
+from tsgan_wrapper import TsganWrapper
+from tsgan_metrics import TsganMetrics 
+from visualizers import Visualizers 
+# import numpy as np
+# import pdb 
+
+loadmodel = TsganWrapper([])
+dataX = []
+dataX_hat = []
+model_name = 'smallab.princess-twenty-two-bravo'
+dataX, dataX_hat = loadmodel.load_model(model_name)
+
+metrics = TsganMetrics(2)
+metrics.compute_discriminative(dataX, dataX_hat)
+metrics.compute_predictive(dataX, dataX_hat)
+results = metrics.mean_std()
+print('Discriminative Score - Mean: ' + str(results[0]) + ', Std: ' + str(results[1]))
+print('Predictive Score - Mean: ' + str(results[2]) + ', Std: ' + str(results[3]))
+
+visualizer = Visualizers(dataX, dataX_hat)
+visualizer.PCA(model_name+'_pca.png')
+visualizer.tSNE(model_name+'_tsne.png')

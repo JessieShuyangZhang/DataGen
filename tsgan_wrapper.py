@@ -89,12 +89,8 @@ class TsganWrapper(DataGenWrapper):
             Temp = X_hat_curr[i,:dataT[i],:]
             dataX_hat.append(Temp)
 
-        # normalize data
-        # min_val = np.min(np.min(dataX, axis = 0), axis = 0)    
-        # max_val = np.max(np.max(dataX, axis = 0), axis = 0)
-        # dataX_hat = dataX_hat * max_val
-        # dataX_hat = dataX_hat + min_val
-        # return dataX_hat
+        return dataX, dataX_hat
+        
 
     def MinMaxScaler(self, dataX):
         min_val = np.min(np.min(dataX, axis = 0), axis = 0)

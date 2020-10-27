@@ -1,0 +1,45 @@
+2020-10-27 01:12:47,427 - smallab.princess-twenty-two-bravo - INFO - Dataset is ready.
+2020-10-27 01:12:59,326 - smallab.princess-twenty-two-bravo - INFO - Start Joint Training
+2020-10-27 01:13:04,242 - smallab.princess-twenty-two-bravo - INFO - step: 0, d_loss: 2.1184, g_loss_u: 0.66, g_loss_s: 0.07, g_loss_v: 0.3975, e_loss_t0: 0.324
+2020-10-27 01:16:48,317 - smallab.princess-twenty-two-bravo - INFO - step: 1000, d_loss: 1.3236, g_loss_u: 2.2493, g_loss_s: 0.0128, g_loss_v: 0.036, e_loss_t0: 0.0368
+2020-10-27 01:20:30,108 - smallab.princess-twenty-two-bravo - INFO - step: 2000, d_loss: 1.2828, g_loss_u: 2.2213, g_loss_s: 0.0205, g_loss_v: 0.0504, e_loss_t0: 0.0314
+2020-10-27 01:24:13,601 - smallab.princess-twenty-two-bravo - INFO - step: 3000, d_loss: 1.4714, g_loss_u: 1.5818, g_loss_s: 0.0197, g_loss_v: 0.0339, e_loss_t0: 0.0191
+2020-10-27 01:27:51,889 - smallab.princess-twenty-two-bravo - INFO - step: 4000, d_loss: 1.5857, g_loss_u: 1.5847, g_loss_s: 0.0145, g_loss_v: 0.0937, e_loss_t0: 0.0138
+2020-10-27 01:31:25,533 - smallab.princess-twenty-two-bravo - INFO - step: 5000, d_loss: 1.5793, g_loss_u: 1.6826, g_loss_s: 0.0117, g_loss_v: 0.0394, e_loss_t0: 0.0114
+2020-10-27 01:35:01,673 - smallab.princess-twenty-two-bravo - INFO - step: 6000, d_loss: 1.5365, g_loss_u: 1.2294, g_loss_s: 0.011, g_loss_v: 0.0596, e_loss_t0: 0.0113
+2020-10-27 01:39:37,287 - smallab.princess-twenty-two-bravo - INFO - step: 7000, d_loss: 1.536, g_loss_u: 1.5048, g_loss_s: 0.0126, g_loss_v: 0.0304, e_loss_t0: 0.0094
+2020-10-27 01:43:58,226 - smallab.princess-twenty-two-bravo - INFO - step: 8000, d_loss: 1.5798, g_loss_u: 1.5074, g_loss_s: 0.0135, g_loss_v: 0.0353, e_loss_t0: 0.0085
+2020-10-27 01:48:03,601 - smallab.princess-twenty-two-bravo - INFO - step: 9000, d_loss: 1.5895, g_loss_u: 1.446, g_loss_s: 0.014, g_loss_v: 0.0378, e_loss_t0: 0.0081
+2020-10-27 01:52:21,300 - smallab.princess-twenty-two-bravo - INFO - step: 10000, d_loss: 1.6255, g_loss_u: 1.3275, g_loss_s: 0.0102, g_loss_v: 0.0457, e_loss_t0: 0.0075
+2020-10-27 01:52:21,301 - smallab.princess-twenty-two-bravo - INFO - Finish Joint Training
+2020-10-27 01:52:22,510 - smallab.princess-twenty-two-bravo - INFO - Computing discriminative score...
+
+(the following is manually added. process broke after encountering a bug in tsgan_metrics. Manually loaded saved model and generated metrics and visualization)
+*discriminative_score_metrics* 0.7041884816753927
+*discriminative_score_metrics* 0.6308900523560209
+[step: 0] loss - d loss: 0.5257375836372375
+[step: 500] loss - d loss: 0.3521363437175751
+[step: 1000] loss - d loss: 0.3569313585758209
+[step: 1500] loss - d loss: 0.3591656982898712
+[step: 2000] loss - d loss: 0.35482388734817505
+[step: 2500] loss - d loss: 0.3489985764026642
+[step: 3000] loss - d loss: 0.3325657844543457
+[step: 3500] loss - d loss: 0.32233524322509766
+[step: 4000] loss - d loss: 0.3144837021827698
+[step: 4500] loss - d loss: 0.302820086479187
+*predictive_score_metrics* 0.10103789921296022
+[step: 0] loss - d loss: 0.47328639030456543
+[step: 500] loss - d loss: 0.380788654088974
+[step: 1000] loss - d loss: 0.3598610758781433
+[step: 1500] loss - d loss: 0.3606937825679779
+[step: 2000] loss - d loss: 0.32249030470848083
+[step: 2500] loss - d loss: 0.31811946630477905
+[step: 3000] loss - d loss: 0.326955646276474
+[step: 3500] loss - d loss: 0.3271085321903229
+[step: 4000] loss - d loss: 0.3252691328525543
+[step: 4500] loss - d loss: 0.31240999698638916
+*predictive_score_metrics* 0.10512398227784091
+*disc_array* [0.20418848167539272, 0.13089005235602091]
+*pred_array* [0.10103789921296022, 0.10512398227784091]
+Discriminative Score - Mean: 0.1675, Std: 0.0366
+Predictive Score - Mean: 0.1031, Std: 0.002
