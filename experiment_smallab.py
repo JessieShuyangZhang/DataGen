@@ -50,10 +50,10 @@ class TsganExperiment(Experiment):
             wrapper.fit(logger=self.get_logger_name(), filename=prefix_str)
             dataX_hat = wrapper.generate()
             logging.getLogger(self.get_logger_name()).info("Computing discriminative score...")
-            metrics.compute_discriminative(dataX, dataX_hat)
+            metrics.compute_discriminative(dataX_disctest, dataX_hat)
             logging.getLogger(self.get_logger_name()).info("Discriminative score complete.")
             logging.getLogger(self.get_logger_name()).info("Computing predictive score...")
-            metrics.compute_predictive(dataX, dataX_hat)
+            metrics.compute_predictive(dataX_disctest, dataX_hat)
             logging.getLogger(self.get_logger_name()).info("Predictive score complete.")
 
         results = metrics.mean_std()
@@ -89,7 +89,7 @@ specifications = SpecificationGenerator().generate(generation_specification)
 print(specifications)
 
 expt = TsganExperiment()
-name = "tsgan_experiment" #+expt.get_hash()
+name = "tsgan_unseen_metrics" #+expt.get_hash()
 runner = ExperimentRunner()
 runner.run(name, specifications, expt, specification_runner=MainRunner(), propagate_exceptions=True)
 

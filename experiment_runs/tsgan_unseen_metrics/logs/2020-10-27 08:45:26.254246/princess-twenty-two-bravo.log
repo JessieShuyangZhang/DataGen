@@ -1,0 +1,21 @@
+2020-10-27 08:45:26,299 - smallab.princess-twenty-two-bravo - INFO - Dataset is ready.
+2020-10-27 08:45:38,254 - smallab.princess-twenty-two-bravo - INFO - Start Joint Training
+2020-10-27 08:45:43,161 - smallab.princess-twenty-two-bravo - INFO - step: 0, d_loss: 2.1804, g_loss_u: 0.6161, g_loss_s: 0.0445, g_loss_v: 0.397, e_loss_t0: 0.3309
+2020-10-27 08:49:30,094 - smallab.princess-twenty-two-bravo - INFO - step: 1000, d_loss: 1.1608, g_loss_u: 1.6363, g_loss_s: 0.0173, g_loss_v: 0.0634, e_loss_t0: 0.0383
+2020-10-27 08:53:15,718 - smallab.princess-twenty-two-bravo - INFO - step: 2000, d_loss: 1.5573, g_loss_u: 1.7123, g_loss_s: 0.0122, g_loss_v: 0.0512, e_loss_t0: 0.0341
+2020-10-27 08:57:00,890 - smallab.princess-twenty-two-bravo - INFO - step: 3000, d_loss: 1.4341, g_loss_u: 2.0199, g_loss_s: 0.0227, g_loss_v: 0.0441, e_loss_t0: 0.0209
+2020-10-27 09:00:46,429 - smallab.princess-twenty-two-bravo - INFO - step: 4000, d_loss: 1.6231, g_loss_u: 1.4251, g_loss_s: 0.0136, g_loss_v: 0.0303, e_loss_t0: 0.0143
+2020-10-27 09:04:31,719 - smallab.princess-twenty-two-bravo - INFO - step: 5000, d_loss: 1.3633, g_loss_u: 1.7663, g_loss_s: 0.0113, g_loss_v: 0.0438, e_loss_t0: 0.0117
+2020-10-27 09:08:17,323 - smallab.princess-twenty-two-bravo - INFO - step: 6000, d_loss: 1.3578, g_loss_u: 1.6204, g_loss_s: 0.0119, g_loss_v: 0.0412, e_loss_t0: 0.0108
+2020-10-27 09:12:02,554 - smallab.princess-twenty-two-bravo - INFO - step: 7000, d_loss: 1.4971, g_loss_u: 1.7073, g_loss_s: 0.0116, g_loss_v: 0.0371, e_loss_t0: 0.0092
+2020-10-27 09:15:47,776 - smallab.princess-twenty-two-bravo - INFO - step: 8000, d_loss: 1.5412, g_loss_u: 1.7473, g_loss_s: 0.0108, g_loss_v: 0.0343, e_loss_t0: 0.0083
+2020-10-27 09:19:33,002 - smallab.princess-twenty-two-bravo - INFO - step: 9000, d_loss: 1.4905, g_loss_u: 1.9357, g_loss_s: 0.0113, g_loss_v: 0.069, e_loss_t0: 0.0083
+2020-10-27 09:23:19,037 - smallab.princess-twenty-two-bravo - INFO - step: 10000, d_loss: 1.1473, g_loss_u: 2.0463, g_loss_s: 0.0099, g_loss_v: 0.0512, e_loss_t0: 0.0071
+2020-10-27 09:23:19,038 - smallab.princess-twenty-two-bravo - INFO - Finish Joint Training
+2020-10-27 09:23:20,253 - smallab.princess-twenty-two-bravo - INFO - Computing discriminative score...
+2020-10-27 09:23:50,896 - smallab.princess-twenty-two-bravo - INFO - Discriminative score complete.
+2020-10-27 09:23:50,896 - smallab.princess-twenty-two-bravo - INFO - Computing predictive score...
+2020-10-27 09:25:10,002 - smallab.princess-twenty-two-bravo - INFO - Predictive score complete.
+2020-10-27 09:25:10,003 - smallab.princess-twenty-two-bravo - INFO - Discriminative Score - Mean: 0.2592, Std: 0.0183
+2020-10-27 09:25:10,004 - smallab.princess-twenty-two-bravo - INFO - Predictive Score - Mean: 0.1135, Std: 0.0039
+2020-10-27 09:25:11,116 - smallab.princess-twenty-two-bravo - INFO - Visualization complete.

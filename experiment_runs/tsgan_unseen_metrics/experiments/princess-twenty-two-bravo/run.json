@@ -1,0 +1,1 @@
+{"specification": {"batch_size": 128, "data_size": 965, "iterations": 10001, "max_seq_length": 12, "sub_iterations": 2, "total_iterations": 1}, "result": {"discriminative score mean": 0.2592, "predictive score mean": 0.1135}}
