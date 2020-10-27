@@ -1,0 +1,22 @@
+2020-10-21 11:14:36,428 - smallab.single-papa-bulldog-mexico - INFO - Dataset is ready.
+2020-10-21 11:14:48,419 - smallab.single-papa-bulldog-mexico - INFO - Start Joint Training
+2020-10-21 11:14:54,499 - smallab.single-papa-bulldog-mexico - INFO - step: 0, d_loss: 2.0589, g_loss_u: 0.7303, g_loss_s: 0.0656, g_loss_v: 0.3906, e_loss_t0: 0.3085
+2020-10-21 11:26:03,470 - smallab.single-papa-bulldog-mexico - INFO - step: 1000, d_loss: 1.1204, g_loss_u: 1.8374, g_loss_s: 0.0198, g_loss_v: 0.0467, e_loss_t0: 0.0256
+2020-10-21 11:37:54,737 - smallab.single-papa-bulldog-mexico - INFO - step: 2000, d_loss: 0.7795, g_loss_u: 3.2454, g_loss_s: 0.0192, g_loss_v: 0.0492, e_loss_t0: 0.0192
+2020-10-21 11:37:54,738 - smallab.single-papa-bulldog-mexico - INFO - Finish Joint Training
+2020-10-21 11:37:56,102 - smallab.single-papa-bulldog-mexico - INFO - Computing discriminative score...
+2020-10-21 11:39:49,503 - smallab.single-papa-bulldog-mexico - INFO - Discriminative score complete.
+2020-10-21 11:39:49,504 - smallab.single-papa-bulldog-mexico - INFO - Computing predictive score...
+2020-10-21 11:45:36,151 - smallab.single-papa-bulldog-mexico - INFO - Predictive score complete.
+2020-10-21 11:45:46,457 - smallab.single-papa-bulldog-mexico - INFO - Start Joint Training
+2020-10-21 11:45:51,799 - smallab.single-papa-bulldog-mexico - INFO - step: 0, d_loss: 1.991, g_loss_u: 0.858, g_loss_s: 0.07, g_loss_v: 0.3939, e_loss_t0: 0.2998
+2020-10-21 11:57:16,240 - smallab.single-papa-bulldog-mexico - INFO - step: 1000, d_loss: 0.8262, g_loss_u: 2.0312, g_loss_s: 0.0173, g_loss_v: 0.0641, e_loss_t0: 0.0181
+2020-10-21 12:08:34,418 - smallab.single-papa-bulldog-mexico - INFO - step: 2000, d_loss: 0.4857, g_loss_u: 3.3242, g_loss_s: 0.0186, g_loss_v: 0.045, e_loss_t0: 0.0137
+2020-10-21 12:08:34,419 - smallab.single-papa-bulldog-mexico - INFO - Finish Joint Training
+2020-10-21 12:08:35,874 - smallab.single-papa-bulldog-mexico - INFO - Computing discriminative score...
+2020-10-21 12:10:30,183 - smallab.single-papa-bulldog-mexico - INFO - Discriminative score complete.
+2020-10-21 12:10:30,184 - smallab.single-papa-bulldog-mexico - INFO - Computing predictive score...
+2020-10-21 12:16:01,336 - smallab.single-papa-bulldog-mexico - INFO - Predictive score complete.
+2020-10-21 12:16:01,338 - smallab.single-papa-bulldog-mexico - INFO - Discriminative Score - Mean: 0.0, Std: 0.0
+2020-10-21 12:16:01,338 - smallab.single-papa-bulldog-mexico - INFO - Predictive Score - Mean: 35.1177, Std: 0.0038
+2020-10-21 12:16:06,710 - smallab.single-papa-bulldog-mexico - INFO - Visualization complete.

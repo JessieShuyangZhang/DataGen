@@ -1,0 +1,1 @@
+[{"batch_size": 128, "data_size": 965, "iterations": 2001, "max_seq_length": 40, "sub_iterations": 3, "total_iterations": 2}]
