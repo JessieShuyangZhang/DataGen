@@ -1,7 +1,0 @@
-2020-10-21 10:37:20,288 - smallab.single-papa-bulldog-mexico - INFO - Dataset is ready.
-2020-10-21 10:37:32,242 - smallab.single-papa-bulldog-mexico - INFO - Start Joint Training
-2020-10-21 10:37:37,623 - smallab.single-papa-bulldog-mexico - INFO - step: 0, d_loss: 2.0026, g_loss_u: 0.9057, g_loss_s: 0.0654, g_loss_v: 0.423, e_loss_t0: 0.3194
-2020-10-21 10:48:38,252 - smallab.single-papa-bulldog-mexico - INFO - step: 1000, d_loss: 0.7339, g_loss_u: 2.4777, g_loss_s: 0.0203, g_loss_v: 0.0279, e_loss_t0: 0.0239
-2020-10-21 10:59:26,067 - smallab.single-papa-bulldog-mexico - INFO - step: 2000, d_loss: 0.7171, g_loss_u: 3.368, g_loss_s: 0.0266, g_loss_v: 0.0607, e_loss_t0: 0.0151
-2020-10-21 10:59:26,068 - smallab.single-papa-bulldog-mexico - INFO - Finish Joint Training
-2020-10-21 10:59:27,495 - smallab.single-papa-bulldog-mexico - INFO - Computing discriminative score...

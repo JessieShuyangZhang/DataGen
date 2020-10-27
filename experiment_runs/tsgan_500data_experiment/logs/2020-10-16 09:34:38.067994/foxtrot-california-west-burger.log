@@ -1,7 +1,0 @@
-2020-10-16 09:34:38,090 - smallab.foxtrot-california-west-burger - INFO - Dataset is ready.
-2020-10-16 09:34:49,778 - smallab.foxtrot-california-west-burger - INFO - Start Joint Training
-2020-10-16 09:34:56,531 - smallab.foxtrot-california-west-burger - INFO - step: 0, d_loss: 2.0862, g_loss_u: 0.6927, g_loss_s: 0.0773, g_loss_v: 0.3425, e_loss_t0: 0.2846
-2020-10-16 09:35:13,740 - smallab.foxtrot-california-west-burger - INFO - Finish Joint Training
-2020-10-16 09:35:16,588 - smallab.foxtrot-california-west-burger - INFO - Visualization complete.
-2020-10-16 09:59:18,068 - smallab.foxtrot-california-west-burger - INFO - Discriminative Score - Mean: 0.0, Std: 0.0
-2020-10-16 09:59:18,070 - smallab.foxtrot-california-west-burger - INFO - Predictive Score - Mean: 0.0, Std: 0.0
