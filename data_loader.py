@@ -26,22 +26,22 @@ class DataLoader:
         cursor = connector.cursor()
         # all locations are from "Gulf of Mexico"
         # cursor.execute("SELECT position_key,time_of_day,latitude,longitude,depth FROM position WHERE position_key%100=0 AND position_key<=100000 ORDER BY time_of_day ASC")
-        # cursor.execute("""SELECT p.position_key,p.time_of_day,p.latitude,p.longitude,p.depth 
-        #                 FROM position p, robots r 
-        #                 WHERE p.robot_key=r.robot_key 
-        #                 AND p.position_key%100=0 
-        #                 AND p.position_key<=100000 
-        #                 AND r.location='Gulf of Mexico' 
-        #                 ORDER BY p.time_of_day ASC""")
-
         cursor.execute("""SELECT p.position_key,p.time_of_day,p.latitude,p.longitude,p.depth 
                         FROM position p, robots r 
                         WHERE p.robot_key=r.robot_key 
                         AND p.position_key%100=0 
-                        AND p.position_key>100000 
-                        AND p.position_key<=200000 
+                        AND p.position_key<=100000 
                         AND r.location='Gulf of Mexico' 
                         ORDER BY p.time_of_day ASC""")
+
+        # cursor.execute("""SELECT p.position_key,p.time_of_day,p.latitude,p.longitude,p.depth 
+        #                 FROM position p, robots r 
+        #                 WHERE p.robot_key=r.robot_key 
+        #                 AND p.position_key%100=0 
+        #                 AND p.position_key>100000 
+        #                 AND p.position_key<=200000 
+        #                 AND r.location='Gulf of Mexico' 
+        #                 ORDER BY p.time_of_day ASC""")
         result = cursor.fetchall()
         
         # trim the data, remove when time difference with the next is less than 10 minutes
@@ -57,7 +57,6 @@ class DataLoader:
             result.remove(el)   
 
         # fetch sensor data: conductivity, density, temperature, salinity
-        # prog = 0  # just to show progress
         for i in range(len(result)):
             fetch_data_cmd = "SELECT value FROM sensor_data WHERE position_key=? LIMIT 4"
             position_key = result[i][0]
@@ -68,19 +67,17 @@ class DataLoader:
             temp = list(result[i])
             temp.extend(sensor_values)
             result[i] = temp
-            # print(prog)
-            # prog+=1
 
         cursor.close()
         connector.close()
         self.raw_data = result
         print("Done loading data")
-
-        self.convert_location()
+        # self.convert_location()   # this is a bug!!
 
 
     def convert_location(self):
         if not self.raw_data:
+            print("loading data before converting location...")
             self.load_raw_data()
         # convert every pair of lat-lon to x-y coords
         # x = r*(lambda-lambda_0)*cos(phi_1), take phi_1 to be 29
@@ -101,8 +98,10 @@ class DataLoader:
 
         print("Done converting location") 
 
+
     def convert_time(self): # let first row's time be base time t0, subtract it from all subsequent rows
         if not self.raw_data:
+            print("loading data before converting time...")
             self.load_raw_data()
         t0 = self.raw_data[0][1]
         for i in range(len(self.raw_data)):
@@ -114,12 +113,9 @@ class DataLoader:
     def output_csv(self):     #not necessary, might make it slower. just load the data from the array
         if not self.raw_data:
             self.load_raw_data()
-        # with open(self.csv_filename, 'wb') as csvfile:
-        #     csv_out = csv.writer(csvfile)
-        #     csv_out.writerow(['postion_key','unix_time','latitude','longitude','depth','conductivity','density','temperature','salinity'])
-        #     csv_out.writerows(self.raw_data)
-
-        a = np.asarray(self.raw_data)
-        np.savetxt(self.csv_filename, a, delimiter=",")
+        with open(self.csv_filename, 'w') as csvfile:
+            csv_out = csv.writer(csvfile)
+            # csv_out.writerow(['postion_key','unix_time','latitude','longitude','depth','conductivity','density','temperature','salinity'])
+            csv_out.writerows(self.raw_data)
 
         print("done with csv")

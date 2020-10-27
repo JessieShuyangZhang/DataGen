@@ -4,9 +4,9 @@ from visualizers import Visualizers
 import numpy as np
 import pdb 
 
-x = np.loadtxt('conv_loc_time.csv', delimiter=',') #, skiprows=1   test on very small dataset
+x = np.loadtxt('conv_loc_time_new.csv', delimiter=',') #, skiprows=1   test on very small dataset
 x = np.delete(x, 0, axis=1)
-# x = x[:6,:]
+x = x[:200,:]
 
 wrapper = TsganWrapper(x)
 wrapper.build_dataset() # seq_length=3
@@ -15,11 +15,12 @@ dataX = wrapper.dataX
 print('Dataset is ready.')
 
 # buidling unseen dataX for discriminative score evaluation
-unseen = np.loadtxt('unseen_dataX.csv', delimiter=',')
+unseen = np.loadtxt('unseen_dataX_new.csv', delimiter=',')
 unseen = np.delete(unseen, 0, axis=1)
 unseen_wrap = TsganWrapper(unseen)
 unseen_wrap.build_dataset()
 dataX_disctest = unseen_wrap.dataX
+dataX_disctest = dataX_disctest[:len(dataX), :]
 
 
 specification = {  # just trying out random values for testing
@@ -41,13 +42,12 @@ prefix_str='mytest2_debug_'
 metrics = TsganMetrics(specification['sub_iterations'])
 
 for it in range(specification['total_iterations']):
+    # pdb.set_trace()
+
     wrapper.fit(filename=prefix_str+'model')
     dataX_hat = wrapper.generate()
-    
-    pdb.set_trace()
-    # print(dataX.shape)
-    # print(dataX_hat.shape)
-    # print(dataX_disctest.shape)
+
+    # pdb.set_trace()
 
     print("computing discriminative")
     metrics.compute_discriminative(dataX_disctest, dataX_hat)

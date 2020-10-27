@@ -295,9 +295,9 @@ def tgan (dataX, parameters, random_generator, logger='', model_saved_name='my_m
         dataX_hat.append(Temp)
         
     # Renormalization
-    if (Normalization_Flag == 1):
-        dataX_hat = dataX_hat * max_val
-        dataX_hat = dataX_hat + min_val
+    # if (Normalization_Flag == 1):
+    #     dataX_hat = dataX_hat * max_val
+    #     dataX_hat = dataX_hat + min_val
 
     # save model
     saver.save(sess, 'saved_models/'+model_saved_name+'/'+model_saved_name)

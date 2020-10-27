@@ -126,6 +126,6 @@ def predictive_score_metrics (dataX, dataX_hat):
         MAE_Temp = MAE_Temp + mean_absolute_error(Y_mb[i], pred_Y_curr[i,:,:])
     
     MAE = MAE_Temp / No
-    
+    print('*predictive_score_metrics*', MAE)
     return MAE
     

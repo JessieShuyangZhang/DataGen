@@ -9,7 +9,7 @@ class TsganWrapper(DataGenWrapper):
     try feeding the pretrained(saved) model some noisy data and generate synthetic data
     '''
     def __init__(self, raw_data):
-        self.raw_data = np.copy(raw_data)
+        self.raw_data = raw_data.copy()
         self.dataX = [] # original data
         self.dataX_hat = [] # synthetic data
         self.parameters = dict() # network parameters
@@ -22,17 +22,24 @@ class TsganWrapper(DataGenWrapper):
         self.parameters['module_name'] = 'gru' # Other optios: 'lstm' or 'lstmLN'
         self.parameters['z_dim'] = 8 
 
-    def build_dataset(self, seq_length=100):  # can tune seq_length
-        self.dataX = []
-        # slice data into time series sequences 
-        for i in range(len(self.raw_data) - seq_length):            
-            _x = np.copy(self.raw_data[i:i+seq_length])
+    def build_dataset(self, seq_length=12):  # can tune seq_length
+        tempX = []
+        # Cut data by sequence length
+        for i in range(0, len(self.raw_data) - seq_length):
+            _x = (self.raw_data[i:i + seq_length]).copy()
             t0 = _x[0][0]
             for i in range(len(_x)): # make the first row in the sequence be t0 = 0
                 _x[i][0] -= t0
-            self.dataX.append(_x)
+            tempX.append(_x)
         # Mix Data (to make it similar to i.i.d)
-        np.random.shuffle(self.dataX)
+        idx = np.random.permutation(len(tempX))
+        self.dataX = []
+        for i in range(len(tempX)):
+            self.dataX.append(tempX[idx[i]])
+
+        # normalize dataX
+        self.dataX, minval, maxval = self.MinMaxScaler(self.dataX)
+        
 
     def set_tgan_parameters(self, param_name, value):  # can tune network parameter through param_name
         if(param_name in self.parameters):
@@ -83,9 +90,16 @@ class TsganWrapper(DataGenWrapper):
             dataX_hat.append(Temp)
 
         # normalize data
-        min_val = np.min(np.min(dataX, axis = 0), axis = 0)    
+        # min_val = np.min(np.min(dataX, axis = 0), axis = 0)    
+        # max_val = np.max(np.max(dataX, axis = 0), axis = 0)
+        # dataX_hat = dataX_hat * max_val
+        # dataX_hat = dataX_hat + min_val
+        # return dataX_hat
+
+    def MinMaxScaler(self, dataX):
+        min_val = np.min(np.min(dataX, axis = 0), axis = 0)
+        dataX = dataX - min_val        
         max_val = np.max(np.max(dataX, axis = 0), axis = 0)
-        dataX_hat = dataX_hat * max_val
-        dataX_hat = dataX_hat + min_val
-        return dataX_hat
+        dataX = dataX / (max_val + 1e-7)        
+        return dataX, min_val, max_val
 

@@ -65,7 +65,7 @@ def PCA_Analysis (dataX, dataX_hat, out_file):
     plt.title('PCA plot')
     plt.xlabel('x-pca')
     plt.ylabel('y_pca')
-    plt.savefig(out_file)
+    plt.savefig('img/'+out_file)
 
     plt.show()
 
@@ -110,6 +110,6 @@ def tSNE_Analysis (dataX, dataX_hat, out_file):
     plt.title('t-SNE plot')
     plt.xlabel('x-tsne')
     plt.ylabel('y_tsne')
-    plt.savefig(out_file)
+    plt.savefig('img/'+out_file)
 
     plt.show()

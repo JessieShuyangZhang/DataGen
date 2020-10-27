@@ -5,19 +5,16 @@ from discriminative_score_metrics import discriminative_score_metrics
 from predictive_score_metrics import predictive_score_metrics
 
 class TsganMetrics:
-    def __init__(self, sub_iterations):#(self, dataX, dataX_hat, sub_iterations):
-        # self.dataX = dataX
-        # self.dataX_hat = dataX_hat
+    def __init__(self, sub_iterations):
         self.sub_iterations = sub_iterations
         self.discriminative_score = list()
         self.predictive_score = list()
 
     def compute_discriminative(self, dataX, dataX_hat):
-        # for tt in range(self.sub_iterations):
-        #     self.discriminative_score.append(discriminative_score_metrics(dataX, dataX_hat))
-        # print('*acc_array*',self.discriminative_score)
-        
-        dataX_hat_cp = dataX_hat[:len(dataX)]
+        assert (
+            len(dataX) == len(dataX_hat)
+        ), f"original and synthetic data have different length"
+
         acc = list()
         for tt in range(self.sub_iterations):
             acc.append(discriminative_score_metrics(dataX, dataX_hat_cp))
@@ -25,10 +22,10 @@ class TsganMetrics:
         
 
     def compute_predictive(self, dataX, dataX_hat):
-        # for tt in range(self.sub_iterations):
-        #     self.predictive_score.append(predictive_score_metrics(dataX, dataX_hat))
-        # print('*MAE_array*',self.predictive_score)
-        dataX_hat_cp = dataX_hat[:len(dataX)]
+        assert (
+            len(dataX) == len(dataX_hat)
+        ), f"original and synthetic data have different length"
+
         MAE_ALL = list()
         for tt in range(self.sub_iterations):
             MAE_ALL.append(predictive_score_metrics(dataX, dataX_hat_cp))
@@ -43,12 +40,4 @@ class TsganMetrics:
         pred_mean = np.round(np.mean(self.predictive_score),4)
         pred_std = np.round(np.std(self.predictive_score),4)
         return disc_mean, disc_std, pred_mean, pred_std
-        
-    # def mean_std(disc, pred):
-    #     disc_mean = np.round(np.mean(disc),4)
-    #     disc_std = np.round(np.std(disc),4)
-    #     pred_mean = np.round(np.mean(pred),4)
-    #     pred_std = np.round(np.std(pred),4)
-    #     return disc_mean, disc_std, pred_mean, pred_std 
-
 

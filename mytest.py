@@ -89,15 +89,36 @@ print(disc_score)
 
 
 
-
-
-
-
-
 # load data once more
 from data_loader import DataLoader
-dl = DataLoader(csv_filename='conv_loc_time.csv')
+dl = DataLoader(csv_filename='conv_loc_time_new.csv')
 dl.load_raw_data()
 dl.convert_location()
 dl.convert_time()
 dl.output_csv()
+
+
+
+
+
+'''
+
+# testing workability of predictive_score_metrics
+import sys
+sys.path.append('metrics')
+from predictive_score_metrics import predictive_score_metrics
+import numpy as np
+
+dataX=np.array([[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]])
+dataX_hat=[[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]],[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]]]
+
+# dataX_hat=np.array([[[1,1,0,1,0],[1,1,0,1,1],[0,0,0,1,0]],[[1,1,0,1,1],[0,0,0,0,0],[1,1,0,1,1]],[[1,1,1,1,1],[0,0,0,0,0],[1,0,0,1,1]]])
+# dataX  =  np.array([[[1,2,2,1,0],[1,2,1,3,0],[0,4,1,1,3]],[[1,0,1,1,0],[1,1,1,1,1],[1,1,0,1,1]],[[1,0,1,1,4],[0,0,3,0,2],[0,1,0,1,1]]])
+# dataX  =  np.array([[[1,1,0,1,0],[1,1,1,1,1],[0,0,0,1,0]],[[1,1,1,1,1],[0,0,0,0,0],[1,1,0,1,1]],[[1,1,1,1,1],[0,0,0,0,0],[1,0,0,1,1]]])
+pred_score=predictive_score_metrics(dataX, dataX_hat)
+print(pred_score)
+
+
+
+'''
+
