@@ -69,7 +69,7 @@ Sub_Iteration = 2   # 10
 
 
 # using cashed dataset with seq_length=40
-x = np.loadtxt('conv_loc_time_new.csv', delimiter=',') #, skiprows=1
+x = np.loadtxt('data/conv_loc_time_new.csv', delimiter=',') #, skiprows=1
 x = np.delete(x, 0, axis=1)
 wrapper = TsganWrapper(x)
 wrapper.build_dataset()

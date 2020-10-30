@@ -7,7 +7,7 @@ import tensorflow as tf
 import numpy as np
 from tsgan_wrapper import TsganWrapper
 
-# x = np.loadtxt('converted_loc.csv', delimiter=',', skiprows=1) # test on very small dataset
+# x = np.loadtxt('data/converted_loc.csv', delimiter=',', skiprows=1) # test on very small dataset
 # x = np.delete(x, 0, axis=1)
 
 # wrapper = TsganWrapper(x)

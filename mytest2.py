@@ -4,7 +4,7 @@ from visualizers import Visualizers
 import numpy as np
 import pdb 
 
-x = np.loadtxt('conv_loc_time_new.csv', delimiter=',') #, skiprows=1   test on very small dataset
+x = np.loadtxt('data/conv_loc_time_new.csv', delimiter=',') #, skiprows=1   test on very small dataset
 x = np.delete(x, 0, axis=1)
 x = x[:200,:]
 
@@ -15,7 +15,7 @@ dataX = wrapper.dataX
 print('Dataset is ready.')
 
 # buidling unseen dataX for discriminative score evaluation
-unseen = np.loadtxt('unseen_dataX_new.csv', delimiter=',')
+unseen = np.loadtxt('data/unseen_dataX_new.csv', delimiter=',')
 unseen = np.delete(unseen, 0, axis=1)
 unseen_wrap = TsganWrapper(unseen)
 unseen_wrap.build_dataset()

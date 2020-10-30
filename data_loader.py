@@ -5,7 +5,7 @@ import csv
 import math
 
 class DataLoader: 
-    def __init__(self, csv_filename='raw_data.csv', data_path='../../noaa-data.db'):
+    def __init__(self, csv_filename='data/raw_data.csv', data_path='../../noaa-data.db'):
         '''
         load raw data from noaa database. converts location from lon-lat into x-y coords
         @type data_path: string
@@ -113,7 +113,7 @@ class DataLoader:
     def output_csv(self):     #not necessary, might make it slower. just load the data from the array
         if not self.raw_data:
             self.load_raw_data()
-        with open(self.csv_filename, 'w') as csvfile:
+        with open('data/'+self.csv_filename, 'w') as csvfile:
             csv_out = csv.writer(csvfile)
             # csv_out.writerow(['postion_key','unix_time','latitude','longitude','depth','conductivity','density','temperature','salinity'])
             csv_out.writerows(self.raw_data)
