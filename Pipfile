@@ -7,11 +7,15 @@ verify_ssl = true
 
 [packages]
 tensorflow = "==1.10.0"
-numpy = "*"
-scikit-learn = "==0.23.2"
 matplotlib = "==2.1.1"
-jupyter = "*"
 smallab = "*"
+esda = "*"
+libpysal = "*"
+pandana = "*"
+torch = "*"
+scikit-learn = "*"
+pandas = "<=0.25.0"
+numpy = "<=1.14.5"
 
 [requires]
 python_version = "3.6"
