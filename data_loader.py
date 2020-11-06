@@ -19,6 +19,7 @@ class DataLoader:
         self.data_path = data_path
         self.raw_data = []
         self.csv_filename = csv_filename
+        self.pos_key_removed = False
 
     # load a part of time series data
     def load_raw_data(self):
@@ -108,13 +109,24 @@ class DataLoader:
         
         print("Done converting time")
         
+    
+    def del_position_key(self): #remove the first column 'position_key' from raw_data
+        if not self.raw_data:
+            self.load_raw_data()
+        for i in self.raw_data:
+            del i[0]
+        self.pos_key_removed = True
+        
 
     def output_csv(self):     #not necessary, might make it slower. just load the data from the array
         if not self.raw_data:
             self.load_raw_data()
         with open('data/'+self.csv_filename, 'w') as csvfile:
             csv_out = csv.writer(csvfile)
-            csv_out.writerow(['postion_key','unix_time','latitude','longitude','depth','conductivity','density','temperature','salinity'])
+            if self.pos_key_removed:
+                csv_out.writerow(['unix_time','latitude','longitude','depth','conductivity','density','temperature','salinity'])
+            else:
+                csv_out.writerow(['postion_key','unix_time','latitude','longitude','depth','conductivity','density','temperature','salinity'])
             csv_out.writerows(self.raw_data)
 
         print("done with csv")
