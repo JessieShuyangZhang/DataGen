@@ -27,16 +27,17 @@ from spacegan_config import Generator, Discriminator
 fig_save_prefix = 'img/'
 
 # dataset
-df = pd.read_csv("data/houses1990.csv",nrows=1001)
+df = pd.read_csv("data/raw_data.csv") #need to drop first column 
+df.drop(['postion_key'], axis=1)
 coord_vars = ["longitude", "latitude"] #Define spatial coordinates
-cond_vars = ['income', 'houseAge', 'rooms', 'bedrooms', 'population', 'households'] + coord_vars #Define the predictor variables
-cont_vars = ["houseValue",'income', 'houseAge', 'rooms', 'bedrooms', 'population', 'households'] + coord_vars #Define which neighbour features to use as context variables
-output_vars = ["houseValue"] #Define output
+cond_vars = ['unix_time', 'depth', 'conductivity', 'density', 'temperature'] + coord_vars #Define the predictor variables
+cont_vars = ['unix_time', 'depth', 'conductivity', 'density', 'temperature', 'salinity'] + coord_vars #Define which neighbour features to use as context variables
+output_vars = ['salinity'] #Define output...just to see if it works
 neighbours = 100
 
 # plotting observed house value distrubution at lon-lat location
 fig, ax1 = plt.subplots(1, 1, figsize=(7, 5))
-gen_seq = df[["houseValue"]].values.astype(float)
+gen_seq = df[["salinity"]].values.astype(float)
 norm_gan_mean = (gen_seq - min(gen_seq)) / (max(gen_seq) - min(gen_seq))
 colors = cm.rainbow(norm_gan_mean)
 
@@ -47,12 +48,12 @@ for lat, long, c in zip(df["latitude"], df["longitude"], colors):
 ax1.set_xlabel(r'$c^{(1)}$', fontsize=14)
 ax1.set_ylabel(r'$c^{(2)}$', fontsize=14)
 ax1.set_title("Observed")
-fig.savefig(fig_save_prefix+'p1.png')
+fig.savefig(fig_save_prefix+'p1_noaa.png')
 
 
 
 # problem configuration
-prob_config = {"epochs": 2000,
+prob_config = {"epochs": 3000,
                "batch_size": 100,
                "device": torch.device("cuda"),
                "cond_dim": len(cond_vars) + (neighbours * len(cont_vars)),  # conditional information size
@@ -101,7 +102,7 @@ check_config = {
     "agg_metrics": True
 }
 
-model_save_prefix = 'saved_models/'
+model_save_prefix = 'saved_models/noaa/'
 
 # train the model
 
@@ -134,7 +135,6 @@ spacegan.df_losses.to_pickle(model_save_prefix+"grid_spaceganlosses.pkl.gz")
 # pick the best Generator (G) as determined by the MIE and the RMSE criterion.
 
 # computing metrics
-# pdb.set_trace()
 gan_metrics = compute_metrics(target, cond_input, prob_config, check_config, coord_input, neighbours)
 
 # selecting and sampling gan
@@ -177,7 +177,7 @@ for lat, long, c in zip(df["latitude"], df["longitude"], colors):
 ax2.set_xlabel(r'$c^{(1)}$', fontsize=14)
 ax2.set_ylabel(r'$c^{(2)}$', fontsize=14)
 ax2.set_title("SpaceGAN - Best " + criteria)
-fig.savefig(fig_save_prefix+'p2.png')
+fig.savefig(fig_save_prefix+'p2_noaa.png')
 
 
 # plot the best generator after RMSE selection
@@ -201,7 +201,7 @@ for lat, long, c in zip(df["latitude"], df["longitude"], colors):
 ax2.set_xlabel(r'$c^{(1)}$', fontsize=14)
 ax2.set_ylabel(r'$c^{(2)}$', fontsize=14)
 ax2.set_title("SpaceGAN - Best RMSE")
-fig.savefig(fig_save_prefix+'p3.png')
+fig.savefig(fig_save_prefix+'p3_noaa.png')
 
 
 # selection
@@ -231,7 +231,7 @@ for lat, long, c in zip(df["latitude"], df["longitude"], colors):
 ax1.set_xlabel(r'$c^{(1)}$', fontsize=14)
 ax1.set_ylabel(r'$c^{(2)}$', fontsize=14)
 ax1.set_title("SpaceGAN (RMSE) - Iteration " + str(iteration))
-fig.savefig(fig_save_prefix+'p4.png')
+fig.savefig(fig_save_prefix+'p4_noaa.png')
 
 
 
@@ -265,7 +265,7 @@ for lat, long, c in zip(df["latitude"], df["longitude"], colors):
 ax1.set_xlabel(r'$c^{(1)}$', fontsize=14)
 ax1.set_ylabel(r'$c^{(2)}$', fontsize=14)
 ax1.set_title("SpaceGAN (MIE) - Iteration " + str(iteration))
-fig.savefig(fig_save_prefix+'p5.png')
+fig.savefig(fig_save_prefix+'p5_noaa.png')
 
 
 
@@ -284,4 +284,4 @@ gan_metrics_norm = gan_metrics["agg_metrics"]
 gan_metrics_norm["RMSE"] = 2 - (np.array(gan_metrics_norm["RMSE"]) / max(np.array(gan_metrics_norm["RMSE"]))) #Normalize RMSE metric for better comparison
 gan_metrics_norm.plot(ax=ax2)
 ax2.set_title("Selection criteria during training")
-fig.savefig(fig_save_prefix+'p6.png')
+fig.savefig(fig_save_prefix+'p6_noaa.png')

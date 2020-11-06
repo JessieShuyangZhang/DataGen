@@ -38,7 +38,7 @@ def pearsoncorr(obs, pred):
 def mie(obs, pred, wdist):
     # compute Moran's Is
     np.random.seed(12345)
-    pdb.set_trace()
+    # pdb.set_trace()
     # if there are islands (points with no neighbors), there will be a value error "cannot reshape array of size 0 into shape(0)"
     # so you have to make sure obs and wdist do not contian empty arrays
     local_mi = esda.moran.Moran_Local(obs, wdist, permutations=100)

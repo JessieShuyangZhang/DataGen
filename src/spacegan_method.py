@@ -147,7 +147,7 @@ class SpaceGAN:
         return self.scaling_method_y.inverse_transform(gen_seq.detach().cpu().numpy())
 
     def checkpoint_model(self, epoch):
-        model_save_prefix = 'saved_models/'
+        model_save_prefix = 'saved_models/noaa/'
         # generator
         torch.save(self.generator, model_save_prefix+"gen_iter %d.pkl.gz" % epoch)
 

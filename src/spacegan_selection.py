@@ -7,7 +7,7 @@ import spacegan_method
 import pdb
 
 def get_spacegan_config(training_step, prob_config, check_config, cond_input, target):
-    model_save_prefix = 'saved_models/'
+    model_save_prefix = 'saved_models/noaa/'
     # load generator
     gen_model = torch.load(model_save_prefix+"gen_iter " + str(training_step) + ".pkl.gz")
 
@@ -47,14 +47,23 @@ def compute_metrics(target, cond_input, prob_config, check_config, coord_input, 
 
         if pf in ["MIE", "MIEPs"]:
             # distance matrix and normalization
-            dist = libpysal.cg.distance_matrix(coord_input)
-            u_dist = np.unique(dist)
-            k_min_dist = np.sort(u_dist.flatten())[:neighbours]
-            kd = libpysal.cg.KDTree(coord_input)
-            pdb.set_trace()
+            '''
+            dist = libpysal.cg.distance_matrix(coord_input) # if there were 100 datapoints, this would be a 101*101 matrix 
+            u_dist = np.unique(dist) # taking all unique values. if distance between each pair of points are all unique, the length would be 101*101/2
+            k_min_dist = np.sort(u_dist.flatten())[:neighbours] # only taking the k smallest distances, where k = num of neighbors
+            kd = libpysal.cg.KDTree(coord_input) # kd.data is an array of all coord pairs
+            '''
+
+            # slightly altered algorithm
+            dist = libpysal.cg.distance_matrix(coord_input) # if there were 100 datapoints, this would be a 101*101 matrix 
+            u_dist = np.unique(dist) # taking all unique values. if distance between each pair of points are all unique, the length would be 101*101/2
+            # k_min_dist = np.sort(u_dist.flatten()) # sorting all unique distances in ascending order
+            kd = libpysal.cg.KDTree(coord_input) # kd.data is an array of all coord pairs
+
+            # pdb.set_trace()
             # potential bug: if the threshold is too low, could result in some points having no neighbors (islands)
             # this will cause value error in spacegan_utils.py
-            wdist = libpysal.weights.DistanceBand(kd, threshold=k_min_dist[neighbours-1], binary=True, p=2)  # Queen  # changed: threshold=k_min_dist[2]
+            wdist = libpysal.weights.DistanceBand(kd, threshold=np.amax(u_dist), binary=True, p=2)  # Queen  # changed: threshold=k_min_dist[2]
             wdist.transform = "r"
 
     for agg in list(agg_funcs_dict.keys()):

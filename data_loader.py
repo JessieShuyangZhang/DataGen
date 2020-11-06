@@ -30,7 +30,7 @@ class DataLoader:
                         FROM position p, robots r 
                         WHERE p.robot_key=r.robot_key 
                         AND p.position_key%100=0 
-                        AND p.position_key<=100000 
+                        AND p.position_key<=200000 
                         AND r.location='Gulf of Mexico' 
                         ORDER BY p.time_of_day ASC""")
 
@@ -72,7 +72,6 @@ class DataLoader:
         connector.close()
         self.raw_data = result
         print("Done loading data")
-        # self.convert_location()   # this is a bug!!
 
 
     def convert_location(self):
@@ -115,7 +114,7 @@ class DataLoader:
             self.load_raw_data()
         with open('data/'+self.csv_filename, 'w') as csvfile:
             csv_out = csv.writer(csvfile)
-            # csv_out.writerow(['postion_key','unix_time','latitude','longitude','depth','conductivity','density','temperature','salinity'])
+            csv_out.writerow(['postion_key','unix_time','latitude','longitude','depth','conductivity','density','temperature','salinity'])
             csv_out.writerows(self.raw_data)
 
         print("done with csv")
