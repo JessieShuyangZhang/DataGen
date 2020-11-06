@@ -10,9 +10,6 @@ prob_config = {
     "epochs": 3000,
     "batch_size": 100,
     "device": torch.device("cuda"),
-    # "cond_dim": len(cond_vars) + (neighbours * len(cont_vars)),  # conditional information size
-    # "output_dim": len(output_vars),  # size of output
-    # "noise_dim": len(cond_vars) + (neighbours * len(cont_vars)),  # size of noise
     "noise_type": gaussian,  # type of noise and dimension used
     "noise_params": None,  # other params for noise (loc, scale, etc.) pass as a dict
     "scale_x": StandardScaler(),  # a sklearn.preprocessing scaling method

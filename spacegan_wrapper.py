@@ -1,12 +1,11 @@
 import matplotlib
 matplotlib.use('Agg')
 
-import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-import warnings
-
-warnings.simplefilter("ignore")
+import pandas as pd
+# import warnings
+# warnings.simplefilter("ignore")
 import pdb
 import sys
 sys.path.append('src')
@@ -79,10 +78,8 @@ class SpaceganWrapper(DataGenWrapper):
         spacegan.train(x_train=self.cond_input, y_train=self.target, coords=self.coord_input)
 
         # export final model and data
-        ### maybe write a separate save function if tsgan's save can be seperated...
         spacegan.checkpoint_model(spacegan.epochs) 
-        spacegan.df_losses.to_pickle(self.model_save_prefix+"grid_spaceganlosses.pkl.gz")
-        
+        self.save_model(spacegan.df_losses, "grid_spaceganlosses.pkl.gz")
     
     def select_best_generators(self):
         # computing metrics
@@ -102,8 +99,8 @@ class SpaceganWrapper(DataGenWrapper):
             # if curious, print out gan_sample_df and its shape and its header
 
             # export results
-            gan_samples_df.to_pickle(self.model_save_prefix+"grid_" + criteria + ".pkl.gz")
-        gan_metrics["agg_metrics"].to_pickle(self.model_save_prefix+"grid_checkmetrics.pkl.gz")
+            self.save_model(gan_samples_df, "grid_" + criteria + ".pkl.gz")
+        self.save_model(gan_metrics["agg_metrics"], "grid_checkmetrics.pkl.gz")
 
 
     def generate(self, iteration): # generating 50 samples and taking the mean
@@ -123,4 +120,7 @@ class SpaceganWrapper(DataGenWrapper):
 
 
     def load_model(self, model_name): #seems useless tho
-        return pd.read_pickle(self.model_save_prefix+model_name)
+        return pd.read_pickle(self.model_save_prefix + model_name)
+
+    def save_model(self, model, model_name): #this also seems useless...don't know if this would work...
+        model.to_pickle(self.model_save_prefix + model_name)
