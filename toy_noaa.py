@@ -62,19 +62,16 @@ prob_config = {"epochs": 3000,
                "noise_params": None,  # other params for noise (loc, scale, etc.) pass as a dict
                "scale_x": StandardScaler(),  # a sklearn.preprocessing scaling method
                "scale_y": StandardScaler(),  # a sklearn.preprocessing scaling method
-               "print_results": False
+               "print_results": False,
+                # additional Generator params
+               "gen_opt": torch.optim.SGD,
+               "gen_opt_params": {"lr": 0.01},
+                # additional Discriminator params
+               "disc_opt": torch.optim.SGD,
+               "disc_opt_params": {"lr": 0.01},
+               # loss function
+               "adversarial_loss": torch.nn.BCELoss()
                }
-
-# additional Generator params
-prob_config["gen_opt"] = torch.optim.SGD
-prob_config["gen_opt_params"] = {"lr": 0.01}
-
-# additional Discriminator params
-prob_config["disc_opt"] = torch.optim.SGD
-prob_config["disc_opt_params"] = {"lr": 0.01}
-
-# loss function
-prob_config["adversarial_loss"] = torch.nn.BCELoss()
 
 # checkpointing configuration
 check_config = {
@@ -216,8 +213,9 @@ gan_samples_df = pd.DataFrame(index=range(cond_input.shape[0]), columns=cond_var
 gan_samples_df[cond_vars + neighbour_list] = cond_input
 gan_samples_df[output_vars] = target
 for i in range(check_config["n_samples"]):
-    gan_samples_df["sample_" + str(i)] = iter_spacegan.predict(gan_samples_df[cond_vars + neighbour_list])
-    
+    # gan_samples_df["sample_" + str(i)] = iter_spacegan.predict(gan_samples_df[cond_vars + neighbour_list])
+    gan_samples_df["sample_" + str(i)] = iter_spacegan.predict(cond_input)
+
 # generate chart
 fig, ax1 = plt.subplots(1, 1, figsize=(7, 5))
 gen_seq = gan_samples_df[["sample_" + str(x) for x in range(1)]].mean(axis=1)
@@ -242,7 +240,7 @@ iteration = 1000
 iter_spacegan = get_spacegan_config(iteration, prob_config, check_config, cond_input, target)
 
 #load mie selection results
-gan_samples_df = pd.read_pickle(model_save_prefix+"grid_MIE.pkl.gz") #is this line not needed??
+# gan_samples_df = pd.read_pickle(model_save_prefix+"grid_MIE.pkl.gz") #is this line not needed??
 # gan_samples_df = pd.read_pickle("./grid_MIE.pkl.gz") 
 
 # training samples
