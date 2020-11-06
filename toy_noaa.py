@@ -27,13 +27,12 @@ from spacegan_config import Generator, Discriminator
 fig_save_prefix = 'img/'
 
 # dataset
-df = pd.read_csv("data/raw_data.csv") #need to drop first column 
-df.drop(['postion_key'], axis=1)
+df = pd.read_csv("data/raw_data.csv",nrows=101) # already dropped position_key column
 coord_vars = ["longitude", "latitude"] #Define spatial coordinates
 cond_vars = ['unix_time', 'depth', 'conductivity', 'density', 'temperature'] + coord_vars #Define the predictor variables
 cont_vars = ['unix_time', 'depth', 'conductivity', 'density', 'temperature', 'salinity'] + coord_vars #Define which neighbour features to use as context variables
 output_vars = ['salinity'] #Define output...just to see if it works
-neighbours = 100
+neighbours = 50
 
 # plotting observed house value distrubution at lon-lat location
 fig, ax1 = plt.subplots(1, 1, figsize=(7, 5))
@@ -243,7 +242,7 @@ iteration = 1000
 iter_spacegan = get_spacegan_config(iteration, prob_config, check_config, cond_input, target)
 
 #load mie selection results
-gan_samples_df = pd.read_pickle(model_save_prefix+"grid_MIE.pkl.gz")
+gan_samples_df = pd.read_pickle(model_save_prefix+"grid_MIE.pkl.gz") #is this line not needed??
 # gan_samples_df = pd.read_pickle("./grid_MIE.pkl.gz") 
 
 # training samples

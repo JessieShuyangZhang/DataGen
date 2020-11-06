@@ -91,8 +91,8 @@ print(disc_score)
 
 # load data once more
 from data_loader import DataLoader
-dl = DataLoader(csv_filename='raw_all_mexico.csv')
-dl.load_raw_data()
+dl = DataLoader(csv_filename='raw_data.csv')
+dl.del_position_key()
 dl.output_csv()
 
 

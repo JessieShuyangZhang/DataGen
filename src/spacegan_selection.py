@@ -55,7 +55,7 @@ def compute_metrics(target, cond_input, prob_config, check_config, coord_input, 
             '''
 
             # slightly altered algorithm
-            dist = libpysal.cg.distance_matrix(coord_input) # if there were 100 datapoints, this would be a 101*101 matrix 
+            dist = libpysal.cg.distance_matrix(coord_input) # if there were 100 datapoints, this would be a 101*101 matrix. Uses Euclidean distance
             u_dist = np.unique(dist) # taking all unique values. if distance between each pair of points are all unique, the length would be 101*101/2
             # k_min_dist = np.sort(u_dist.flatten()) # sorting all unique distances in ascending order
             kd = libpysal.cg.KDTree(coord_input) # kd.data is an array of all coord pairs

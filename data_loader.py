@@ -31,7 +31,7 @@ class DataLoader:
                         FROM position p, robots r 
                         WHERE p.robot_key=r.robot_key 
                         AND p.position_key%100=0 
-                        AND p.position_key<=200000 
+                        AND p.position_key<=100000 
                         AND r.location='Gulf of Mexico' 
                         ORDER BY p.time_of_day ASC""")
 
