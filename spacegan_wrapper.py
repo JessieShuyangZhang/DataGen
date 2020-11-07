@@ -15,11 +15,10 @@ from spacegan_utils import gaussian, rmse, mie, get_neighbours_featurize
 from spacegan_config import Generator, Discriminator
 from datagen_wrapper import DataGenWrapper
 
-# fig_save_prefix = 'img/'
-
 class SpaceganWrapper(DataGenWrapper):
-    def __init__(self, prob_config, check_config, model_save_prefix='saved_models/noaa/'):
+    def __init__(self, prob_config, check_config, model_save_prefix='saved_models/noaa/', fig_save_prefix='img/'):
         self.model_save_prefix = model_save_prefix  # path to save the model
+        self.fig_save_prefix = fig_save_prefix
         self.prob_config = prob_config
         self.check_config = check_config
         self.df = None
@@ -52,7 +51,7 @@ class SpaceganWrapper(DataGenWrapper):
         self.prob_config["cond_dim"] = len(self.cond_vars) + (self.neighbours * len(self.cont_vars))
         self.prob_config["output_dim"] = len(self.output_vars)  # size of output
         self.prob_config["noise_dim"] = self.prob_config["cond_dim"]  # size of noise
-        
+        return self.df
 
     def build_gan(self):
         # neighbours
@@ -115,8 +114,27 @@ class SpaceganWrapper(DataGenWrapper):
         return gan_samples_df
     
 
-    def plotting(self, img_name): #haven't decided if i need this & don't know how to write this neatly
-        return None
+    def plot(self, img_name, title, generated_seq, dataframe=None): #haven't decided if i need this & don't know how to write this neatly
+
+        # plotting observed house value distrubution at lon-lat location
+        if(dataframe is not None):
+            fig, (ax1,ax2) = plt.subplots(1, 2, figsize=(15, 5))
+            dataframe.plot(ax=ax1)
+            #set title for ax1 ?
+        else:
+            fig, ax2 = plt.subplots(1, 1, figsize=(7, 5))
+            
+        gen_seq = generated_seq
+        norm_gan_mean = (gen_seq - min(gen_seq)) / (max(gen_seq) - min(gen_seq))
+        colors = cm.rainbow(norm_gan_mean)
+
+        # plotting
+        for lat, long, c in zip(self.df["latitude"], self.df["longitude"], colors):
+            ax2.scatter(lat, long, color=c, s=5)          # s denotes marker size
+        ax2.set_xlabel(r'$c^{(1)}$', fontsize=14)
+        ax2.set_ylabel(r'$c^{(2)}$', fontsize=14)
+        ax2.set_title(title)
+        fig.savefig(self.fig_save_prefix+img_name)
 
 
     def load_model(self, model_name): #seems useless tho

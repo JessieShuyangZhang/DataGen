@@ -75,7 +75,7 @@ prob_config = {"epochs": 3000,
 
 # checkpointing configuration
 check_config = {
-    "check_interval": 1000,  # for model checkpointing
+    "check_interval": 100,  # for model checkpointing
     "generate_image": False,
     "n_samples": 50,
     "perf_metrics": {"RMSE": rmse,
@@ -248,7 +248,7 @@ gan_samples_df = pd.DataFrame(index=range(cond_input.shape[0]), columns=cond_var
 gan_samples_df[cond_vars + neighbour_list] = cond_input
 gan_samples_df[output_vars] = target
 for i in range(check_config["n_samples"]):
-    gan_samples_df["sample_" + str(i)] = iter_spacegan.predict(gan_samples_df[cond_vars + neighbour_list])
+    gan_samples_df["sample_" + str(i)] = iter_spacegan.predict(cond_input)
     
 # generate chart
 fig, ax1 = plt.subplots(1, 1, figsize=(7, 5))
