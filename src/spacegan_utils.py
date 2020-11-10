@@ -102,5 +102,5 @@ def get_neighbours_featurize(sp_df, spatial_coords, features, nn_size):
     # get features and featurize them
     for i in sp_df.index:
         aug_sp_df.loc[i] = sp_df.iloc[nneighbors[i][1:]][features].values.reshape(-1, 1, order="F").transpose()
-
+    # pdb.set_trace()
     return pd.concat([sp_df, aug_sp_df], axis=1), label_list

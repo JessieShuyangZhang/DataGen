@@ -40,17 +40,30 @@ class SpaceganWrapper(DataGenWrapper):
         self.gen_method = None
 
 
-    def build_dataset(self, filename, neighbours, output_vars, rows=2): # construct a dataframe from a csv file with a header of var names
-        self.df = pd.read_csv(filename,nrows=rows) #don't know if this syntax works
+    def build_dataset(self, filename, neighbours,cond_vars, output_vars, rows): # construct a dataframe from a csv file with a header of var names
+        self.df = pd.read_csv(filename,nrows=rows) 
+        # self.coord_vars = ["longitude", "latitude"] #Define spatial coordinates
+        # # cond_vars and cont_vars are hardcoded for now...can be made tunable later
+        # self.cond_vars = ['unix_time', 'depth', 'conductivity', 'density', 'temperature'] + self.coord_vars #Define the predictor variables
+        # self.cont_vars = ['unix_time', 'depth', 'conductivity', 'density', 'temperature', 'salinity'] + self.coord_vars #Define which neighbour features to use as context variables
+        # self.output_vars = [output_vars]
+
+        # self.coord_vars = ["longitude", "latitude"] #Define spatial coordinates
+        # self.cond_vars = ['unix_time'] + self.coord_vars #Define the predictor variables
+        # self.cont_vars = ['unix_time', 'depth', 'conductivity', 'density', 'temperature', 'salinity'] + self.coord_vars #Define which neighbour features to use as context variables
+        # self.output_vars = ['depth', 'conductivity', 'density', 'temperature', 'salinity']
+        
         self.coord_vars = ["longitude", "latitude"] #Define spatial coordinates
-        # cond_vars and cont_vars are hardcoded for now...can be made tunable later
-        self.cond_vars = ['unix_time', 'depth', 'conductivity', 'density', 'temperature'] + self.coord_vars #Define the predictor variables
-        self.cont_vars = ['unix_time', 'depth', 'conductivity', 'density', 'temperature', 'salinity'] + self.coord_vars #Define which neighbour features to use as context variables
-        self.output_vars = [output_vars]
+        self.cond_vars = cond_vars + self.coord_vars #Define the predictor variables
+        self.cont_vars_arr=['unix_time', 'depth', 'conductivity', 'density', 'temperature', 'salinity'] + self.coord_vars #fixed? always all of the variables
+        self.output_vars = output_vars
+
+
         self.neighbours = neighbours
         self.prob_config["cond_dim"] = len(self.cond_vars) + (self.neighbours * len(self.cont_vars))
         self.prob_config["output_dim"] = len(self.output_vars)  # size of output
         self.prob_config["noise_dim"] = self.prob_config["cond_dim"]  # size of noise
+        # pdb.set_trace()
         return self.df
 
     def build_gan(self):
@@ -83,18 +96,28 @@ class SpaceganWrapper(DataGenWrapper):
     def select_best_generators(self):
         # computing metrics
         gan_metrics = compute_metrics(self.target, self.cond_input, self.prob_config, self.check_config, self.coord_input, self.neighbours)
-
+        min_rmse_val = None
+        min_mie_val = None
         # selecting and sampling gan
         for criteria in list(self.check_config["perf_metrics"].keys()):   # criteria is either RMSE or MIE
             # find best config
             criteria_info = self.check_config["pf_metrics_setting"][criteria]
             perf_metrics = gan_metrics[criteria_info["metric_level"]]
             perf_values = criteria_info["agg_function"](perf_metrics[[criteria]])
+            # print("perf_values for "+criteria,perf_values) # just out of curiosity
+            if(criteria == "RMSE"):
+                min_rmse_val = perf_values[criteria_info["rank_function"](perf_values)]
+                print("min perf_value for "+criteria, min_rmse_val)
+            else:
+                min_mie_val = perf_values[criteria_info["rank_function"](perf_values)]
+                print("min perf_value for "+criteria, min_mie_val)
+
             best_config = perf_metrics.index[criteria_info["rank_function"](perf_values)]  # the training step that has the best generator
             print("best "+criteria+" at iteration ",best_config) # just out of curiosity
 
             # generate samples of synthetic data    
             gan_samples_df = self.generate(best_config)
+            # pdb.set_trace()
             # if curious, print out gan_sample_df and its shape and its header
 
             # export results
