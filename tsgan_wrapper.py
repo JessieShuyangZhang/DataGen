@@ -2,6 +2,7 @@ import numpy as np
 from tgan import tgan
 import tensorflow as tf
 from datagen_wrapper import DataGenWrapper
+import pdb
 
 class TsganWrapper(DataGenWrapper):
     '''
@@ -23,6 +24,7 @@ class TsganWrapper(DataGenWrapper):
         self.parameters['z_dim'] = 8 
 
     def build_dataset(self, seq_length=12):  # can tune seq_length
+        pdb.set_trace()
         tempX = []
         # Cut data by sequence length
         for i in range(0, len(self.raw_data) - seq_length):
@@ -39,6 +41,7 @@ class TsganWrapper(DataGenWrapper):
 
         # normalize dataX
         self.dataX, minval, maxval = self.MinMaxScaler(self.dataX)
+        return self.dataX
         
 
     def set_tgan_parameters(self, param_name, value):  # can tune network parameter through param_name

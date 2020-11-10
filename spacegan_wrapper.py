@@ -42,23 +42,10 @@ class SpaceganWrapper(DataGenWrapper):
 
     def build_dataset(self, filename, neighbours,cond_vars, output_vars, rows): # construct a dataframe from a csv file with a header of var names
         self.df = pd.read_csv(filename,nrows=rows) 
-        # self.coord_vars = ["longitude", "latitude"] #Define spatial coordinates
-        # # cond_vars and cont_vars are hardcoded for now...can be made tunable later
-        # self.cond_vars = ['unix_time', 'depth', 'conductivity', 'density', 'temperature'] + self.coord_vars #Define the predictor variables
-        # self.cont_vars = ['unix_time', 'depth', 'conductivity', 'density', 'temperature', 'salinity'] + self.coord_vars #Define which neighbour features to use as context variables
-        # self.output_vars = [output_vars]
-
-        # self.coord_vars = ["longitude", "latitude"] #Define spatial coordinates
-        # self.cond_vars = ['unix_time'] + self.coord_vars #Define the predictor variables
-        # self.cont_vars = ['unix_time', 'depth', 'conductivity', 'density', 'temperature', 'salinity'] + self.coord_vars #Define which neighbour features to use as context variables
-        # self.output_vars = ['depth', 'conductivity', 'density', 'temperature', 'salinity']
-        
         self.coord_vars = ["longitude", "latitude"] #Define spatial coordinates
         self.cond_vars = cond_vars + self.coord_vars #Define the predictor variables
         self.cont_vars_arr=['unix_time', 'depth', 'conductivity', 'density', 'temperature', 'salinity'] + self.coord_vars #fixed? always all of the variables
         self.output_vars = output_vars
-
-
         self.neighbours = neighbours
         self.prob_config["cond_dim"] = len(self.cond_vars) + (self.neighbours * len(self.cont_vars))
         self.prob_config["output_dim"] = len(self.output_vars)  # size of output

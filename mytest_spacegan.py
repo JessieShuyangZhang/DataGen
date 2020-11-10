@@ -7,6 +7,7 @@ from sklearn.preprocessing import StandardScaler
 import pdb
 import pandas as pd
 from tsgan_metrics import TsganMetrics 
+from tsgan_wrapper import TsganWrapper
 
 
 def one_run(cond_vars_arr, output_vars_arr):
@@ -97,15 +98,21 @@ _, gen_seq_2 = one_run(cond_vars_arr=['unix_time', 'depth', 'density', 'temperat
 _, gen_seq_1 = one_run(cond_vars_arr=['unix_time', 'conductivity', 'density', 'temperature', 'salinity'],output_vars_arr=['depth'])
 _, gen_seq_0 = one_run(cond_vars_arr=['depth', 'conductivity', 'density', 'temperature', 'salinity'],output_vars_arr=['unix_time'])
 
-# pdb.set_trace()
+
 synthetic_df = pd.concat([gen_seq_0,gen_seq_1,gen_seq_2,gen_seq_3,gen_seq_4,gen_seq_5], axis=1)
 
-data = df.to_numpy()
-dataX = synthetic_df.to_numpy()
+dataX = df.to_numpy()
+dataX_hat = synthetic_df.to_numpy()
 
+t0 = TsganWrapper(dataX)
+dataX = t0.build_dataset()
+t1 = TsganWrapper(dataX_hat)
+dataX_hat = t1.build_dataset()
 
+pdb.set_trace()
 tsgan_metrics = TsganMetrics(1)
-tsgan_metrics.compute_discriminative(data, dataX)
-tsgan_metrics.compute_predictive(data, dataX)
+tsgan_metrics.compute_discriminative(dataX, dataX_hat)
+tsgan_metrics.compute_predictive(dataX, dataX_hat)
 results = tsgan_metrics.mean_std()
 print(results)
+
