@@ -95,30 +95,72 @@ dl = DataLoader(csv_filename='raw_data.csv')
 dl.del_position_key()
 dl.output_csv()
 
+# load data once more
+from data_loader import DataLoader
+dl = DataLoader()
+robot_keys_mexico = dl.get_robot_keys_at_location()
+robot_key = robot_keys_mexico[0]
+dl.load_raw_data(robot_key)
+dl.output_csv("mexico/key_1.csv")
+# for i in range(1,5):
+#     robot_key = robot_keys_mexico[i]
+#     dl.load_raw_data(robot_key)
+#     dl.output_csv('mexico/key_'+str(robot_key)+'.csv')
 
 
 
-
-'''
-
-# testing workability of predictive_score_metrics
-import sys
-sys.path.append('metrics')
-from predictive_score_metrics import predictive_score_metrics
-import numpy as np
-
-dataX=np.array([[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]])
-dataX_hat=[[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]],[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]]]
-
-# dataX_hat=np.array([[[1,1,0,1,0],[1,1,0,1,1],[0,0,0,1,0]],[[1,1,0,1,1],[0,0,0,0,0],[1,1,0,1,1]],[[1,1,1,1,1],[0,0,0,0,0],[1,0,0,1,1]]])
-# dataX  =  np.array([[[1,2,2,1,0],[1,2,1,3,0],[0,4,1,1,3]],[[1,0,1,1,0],[1,1,1,1,1],[1,1,0,1,1]],[[1,0,1,1,4],[0,0,3,0,2],[0,1,0,1,1]]])
-# dataX  =  np.array([[[1,1,0,1,0],[1,1,1,1,1],[0,0,0,1,0]],[[1,1,1,1,1],[0,0,0,0,0],[1,1,0,1,1]],[[1,1,1,1,1],[0,0,0,0,0],[1,0,0,1,1]]])
-pred_score=predictive_score_metrics(dataX, dataX_hat)
-print(pred_score)
-
+from data_loader import DataLoader
+dl = DataLoader()
+robot_starting = dl.load_raw_data()
 
 
 '''
+robot keys of Gulf of Mexico
+[1, 2, 13, 29, 35, 36, 38, 39, 51, 52, 54, 55, 58, 64, 65, 66, 67, 70, 72, 78, 90, 159, 193, 194, 202, 204, 205, 
+206, 207, 208, 209, 210, 211, 213, 214, 215, 216, 217, 218, 237, 245, 247, 248, 249, 250, 251, 252, 253, 254, 255, 
+256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 292, 530, 531, 532, 547, 548, 549, 550, 551, 554, 555, 
+556, 557, 558, 560, 562, 564, 614, 615, 620, 621, 622, 623, 624, 625, 627, 628, 629, 630, 631, 632, 633, 634, 635, 
+753, 755, 757, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 777, 778, 779, 780, 781, 782, 783, 
+786, 849, 905, 906, 911, 934]
+'''
+
+import sqlite3 as sq3 
+connector = sq3.connect('../../noaa-data.db')
+cursor=connector.cursor()
+import json
+with open('start_position.json') as json_file:
+    robot_starting = json.load(json_file)
+
+robot_starting={int(k):int(v) for k,v in robot_starting.items()}
+# try robot_key==13
+key = 13
+start_position = robot_starting[13]
+end_position = robot_starting[29]-1
+fetch_data_cmd = "SELECT x.type_of_data, x.value FROM (sensor_data inner join position on position.position_key==sensor_data.position_key) as x WHERE x.position_key=? LIMIT 4"
+for position in range(start_position,end_position,100):
+    cursor.execute(fetch_data_cmd,(position,))
+    sensor_data = cursor.fetchall() # still slow when there is missing data
+    print(position)
+    print(sensor_data)
+
+
+# position_key=1392161 only has temperature and pressure(irrelavent)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # restore saved model to compute metrics
 
