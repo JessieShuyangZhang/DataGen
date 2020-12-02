@@ -57,7 +57,7 @@ def one_run(cond_vars_arr, output_vars_arr):
     }
 
     spgan_wrapper = SpaceganWrapper(prob_config, check_config, model_save_prefix='saved_models/noaa/',fig_save_prefix='img/noaa/')
-    df = spgan_wrapper.build_dataset("data/raw_data.csv", rows=101, neighbours=5, output_vars=output_vars_arr,cond_vars=cond_vars_arr)
+    df = spgan_wrapper.build_dataset("data/mexico/traj_35.csv", rows=101, neighbours=5, output_vars=output_vars_arr,cond_vars=cond_vars_arr)
     # plot(self, img_name, title, generated_seq, dataframe=None):
 
     # build_dataset need to return dataframe for this to work
@@ -99,17 +99,25 @@ _, gen_seq_1 = one_run(cond_vars_arr=['unix_time', 'conductivity', 'density', 't
 _, gen_seq_0 = one_run(cond_vars_arr=['depth', 'conductivity', 'density', 'temperature', 'salinity'],output_vars_arr=['unix_time'])
 
 
-synthetic_df = pd.concat([gen_seq_0,gen_seq_1,gen_seq_2,gen_seq_3,gen_seq_4,gen_seq_5], axis=1)
+synthetic_df = pd.concat([gen_seq_0,df.iloc[:,1],df.iloc[:,2],gen_seq_1,gen_seq_2,gen_seq_3,gen_seq_4,gen_seq_5], axis=1)
+# pdb.set_trace()
 
 dataX = df.to_numpy()
 dataX_hat = synthetic_df.to_numpy()
 
+# treat entire dataX as one time-series sequence? 
+# doesn't work...ValueError: Cannot feed value of shape (0,) for Tensor 'myinput_x:0', which has shape '(?, 101, 8)'
+# dataX = np.array([dataX])
+# dataX_hat = np.array([dataX_hat])
+
+# slice it into time-series sequences for the sake of computing success metrics
+# should be fine since it is within the same trajectory
 t0 = TsganWrapper(dataX)
 dataX = t0.build_dataset()
 t1 = TsganWrapper(dataX_hat)
 dataX_hat = t1.build_dataset()
 
-pdb.set_trace()
+# pdb.set_trace()
 tsgan_metrics = TsganMetrics(1)
 tsgan_metrics.compute_discriminative(dataX, dataX_hat)
 tsgan_metrics.compute_predictive(dataX, dataX_hat)
