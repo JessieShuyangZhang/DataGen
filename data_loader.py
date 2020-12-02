@@ -174,7 +174,7 @@ class DataLoader:
             if self.pos_key_removed:
                 csv_out.writerow(['unix_time','latitude','longitude','depth','conductivity','density','temperature','salinity'])
             else:
-                csv_out.writerow(['postion_key','unix_time','latitude','longitude','depth','conductivity','density','temperature','salinity'])
+                csv_out.writerow(['position_key','unix_time','latitude','longitude','depth','conductivity','density','temperature','salinity'])
             csv_out.writerows(self.raw_data)
 
         print("done with csv")
