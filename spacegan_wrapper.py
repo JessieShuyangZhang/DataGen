@@ -4,8 +4,12 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import pandas as pd
+import numpy as np
 # import warnings
 # warnings.simplefilter("ignore")
+import torch
+import torch.nn as nn
+from sklearn.preprocessing import StandardScaler
 import pdb
 import sys
 sys.path.append('src')
@@ -16,17 +20,57 @@ from spacegan_config import Generator, Discriminator
 from datagen_wrapper import DataGenWrapper
 
 class SpaceganWrapper(DataGenWrapper):
-    def __init__(self, prob_config, check_config, model_save_prefix='saved_models/noaa/', fig_save_prefix='img/'):
+    def __init__(self, output_vars=[],cond_vars=[], model_save_prefix='saved_models/noaa/', fig_save_prefix='img/noaa'): #prob_config, check_config, 
         self.model_save_prefix = model_save_prefix  # path to save the model
         self.fig_save_prefix = fig_save_prefix
-        self.prob_config = prob_config
-        self.check_config = check_config
+        self.prob_config = {
+            "epochs": 1000,
+            "batch_size": 100,
+            "device": torch.device("cuda"),
+            "noise_type": gaussian,  # type of noise and dimension used
+            "noise_params": None,  # other params for noise (loc, scale, etc.) pass as a dict
+            "scale_x": StandardScaler(),  # a sklearn.preprocessing scaling method
+            "scale_y": StandardScaler(),  # a sklearn.preprocessing scaling method
+            "print_results": False,
+            "neighbours": 50,
+            # additional Generator params
+            "gen_opt": torch.optim.SGD,
+            "gen_opt_params": {"lr": 0.01},
+            # additional Discriminator params
+            "disc_opt": torch.optim.SGD,
+            "disc_opt_params": {"lr": 0.01},
+            # loss function
+            "adversarial_loss": torch.nn.BCELoss()
+        }
+        self.check_config = {
+            "check_interval": 1000,  # for model checkpointing
+            "generate_image": False,
+            "n_samples": 50,
+            "perf_metrics": {"RMSE": rmse,
+                            "MIE": mie,
+                            },
+            "pf_metrics_setting": {
+                "RMSE": {"metric_level": "agg_metrics",
+                    "rank_function": np.argmin,
+                    "agg_function": lambda x: np.array(x)
+                    },
+                "MIE": {"metric_level": "agg_metrics",
+                        "rank_function": np.argmin,
+                        "agg_function": lambda x: np.array(x)
+                    },
+            },
+            "agg_funcs": {"avg": np.mean,
+                        "std": np.std
+                        },
+            "sample_metrics": False,
+            "agg_metrics": True
+        }
         self.df = None
-        self.neighbours = None
-        self.coord_vars = []
-        self.cond_vars = []
-        self.cont_vars = []
-        self.output_vars = []        
+        self.neighbours = self.prob_config["neighbours"]
+        self.coord_vars = ["longitude", "latitude"]
+        self.cond_vars = cond_vars + self.coord_vars
+        self.cont_vars=['unix_time', 'depth', 'conductivity', 'density', 'temperature', 'salinity'] + self.coord_vars #fixed? always all of the variables  
+        self.output_vars = output_vars   
         self.neighbour_list = [] # list of labels after augmentation by neighbours (eg. 'nn_houseValue_0', 'nn_houseValue_1'...'nn_latitude_8', 'nn_latitude_9')
 
         self.original = []
@@ -40,13 +84,20 @@ class SpaceganWrapper(DataGenWrapper):
         self.gen_method = None
 
 
-    def build_dataset(self, filename, neighbours,cond_vars, output_vars, rows): # construct a dataframe from a csv file with a header of var names
-        self.df = pd.read_csv(filename,nrows=rows) 
-        self.coord_vars = ["longitude", "latitude"] #Define spatial coordinates
-        self.cond_vars = cond_vars + self.coord_vars #Define the predictor variables
-        self.cont_vars_arr=['unix_time', 'depth', 'conductivity', 'density', 'temperature', 'salinity'] + self.coord_vars #fixed? always all of the variables
-        self.output_vars = output_vars
-        self.neighbours = neighbours
+    def build_dataset(self, csv_files, rows=None): # construct a dataframe from a csv file with a header of var names
+        # csv_files is an array of files to be loaded 
+        self.df = pd.read_csv(csv_files[0])
+        for i in range(1, len(csv_files)):
+            df2 = pd.read_csv(csv_files[0])
+            self.df = pd.concat([self.df, df2],ignore_index = True)
+        # pdb.set_trace()
+        if('position_key' in self.df.columns): # remove the column of position_key
+            self.df.drop('position_key', axis=1, inplace=True)
+        # self.coord_vars = ["longitude", "latitude"] #Define spatial coordinates
+        # self.cond_vars = cond_vars + self.coord_vars #Define the predictor variables
+        # self.cont_vars_arr=['unix_time', 'depth', 'conductivity', 'density', 'temperature', 'salinity'] + self.coord_vars #fixed? always all of the variables
+        # self.output_vars = output_vars
+        # self.neighbours = neighbours
         self.prob_config["cond_dim"] = len(self.cond_vars) + (self.neighbours * len(self.cont_vars))
         self.prob_config["output_dim"] = len(self.output_vars)  # size of output
         self.prob_config["noise_dim"] = self.prob_config["cond_dim"]  # size of noise
@@ -103,7 +154,7 @@ class SpaceganWrapper(DataGenWrapper):
             print("best "+criteria+" at iteration ",best_config) # just out of curiosity
 
             # generate samples of synthetic data    
-            gan_samples_df = self.generate(best_config)
+            gan_samples_df = self.generate_samples(best_config)
             # pdb.set_trace()
             # if curious, print out gan_sample_df and its shape and its header
 
@@ -112,7 +163,7 @@ class SpaceganWrapper(DataGenWrapper):
         self.save_model(gan_metrics["agg_metrics"], "grid_checkmetrics.pkl.gz")
 
 
-    def generate(self, iteration): # generating 50 samples and taking the mean
+    def generate_samples(self, iteration): # generating 50 samples and taking the mean
         iter_spacegan = get_spacegan_config(iteration, self.prob_config, self.check_config, self.cond_input, self.target)
         
         # training samples
@@ -152,3 +203,6 @@ class SpaceganWrapper(DataGenWrapper):
 
     def save_model(self, model, model_name): #this also seems useless...don't know if this would work...
         model.to_pickle(self.model_save_prefix + model_name)
+
+    def set_prob_config_param(param, value):
+        self.prob_config[param] = value

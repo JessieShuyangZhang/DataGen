@@ -16,28 +16,23 @@ from visualizers import Visualizers
 class TsganExperiment(Experiment):
     def main(self, specification:typing.Dict) -> typing.Dict:
 
-        # data loading
-        # need to change to use data_loader later
-        # currently using cashed data from csv file
-        x = np.loadtxt('data/conv_loc_time_new.csv', delimiter=',') #, skiprows=1
-        x = np.delete(x, 0, axis=1)
+        # data loading: using cashed data from csv file
+        # x = np.loadtxt('data/conv_loc_time_new.csv', delimiter=',') #, skiprows=1
+        # x = np.delete(x, 0, axis=1)
         # x = x[:specification["data_size"],:]
-        wrapper = TsganWrapper(x)
+        train_traj = ['data/mexico/traj_35.csv','data/mexico/traj_1.csv']
+        wrapper = TsganWrapper()
         seq_length = min(specification["max_seq_length"], int(specification["data_size"]/3))
-        wrapper.build_dataset(seq_length)
-        dataX = wrapper.dataX
+        dataX = wrapper.build_dataset(csv_files=train_traj, seq_length)
         
         # loading unseen data: to test discriminative score and predivtive score
-        unseen = np.loadtxt('data/unseen_dataX_new.csv', delimiter=',')
-        unseen = np.delete(unseen, 0, axis=1)
-        unseen_wrap = TsganWrapper(unseen)
-        unseen_wrap.build_dataset()
-        dataX_disctest = unseen_wrap.dataX
+        # unseen = np.loadtxt('data/unseen_dataX_new.csv', delimiter=',')
+        # unseen = np.delete(unseen, 0, axis=1)
+        unseen_wrap = TsganWrapper()
+        dataX_disctest = unseen_wrap.build_dataset(csv_files=['data/mexico/traj_13.csv'],seq_length)
         dataX_disctest = dataX_disctest[:len(dataX), :]
 
         logging.getLogger(self.get_logger_name()).info("Dataset is ready.")
-
-        prefix_str = self.get_logger_name()
 
         wrapper.set_tgan_parameters('iterations', specification['iterations'])
         wrapper.set_tgan_parameters('batch_size', specification['batch_size'])
@@ -45,6 +40,7 @@ class TsganExperiment(Experiment):
         wrapper.set_tgan_parameters('z_dim', len(dataX[0][0,:]))
 
         metrics = TsganMetrics(specification['sub_iterations'])
+        prefix_str = self.get_logger_name()
 
         for it in range(specification['total_iterations']):
             wrapper.fit(logger=self.get_logger_name(), filename=prefix_str)
@@ -77,7 +73,7 @@ class TsganExperiment(Experiment):
 generation_specification = {  # just trying out random values for testing
     "total_iterations": [1], 
     "sub_iterations": [2],
-    "data_size": [965],
+    "data_size": [300],
     "max_seq_length": [12],
     "iterations": [10001],
     "batch_size": [128],

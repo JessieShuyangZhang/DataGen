@@ -9,30 +9,59 @@ class TsganWrapper(DataGenWrapper):
     data preprocessing, random generator for tgan, run/train tgan
     try feeding the pretrained(saved) model some noisy data and generate synthetic data
     '''
-    def __init__(self, raw_data):
-        self.raw_data = raw_data.copy()
-        self.dataX = [] # original data
+    def __init__(self, dataX=[], hidden_dim=32, num_layers=3, iterations=10, batch_size=32, module_name='gru', z_dim=8): #, raw_data
+        # self.raw_data = raw_data.copy()
+        self.dataX = dataX # original data
         self.dataX_hat = [] # synthetic data
         self.parameters = dict() # network parameters
         # parameters: a dictionary with keys: hidden_dim,num_layers,iterations,batch_size,module_name,z_dim
         # arbitrary initial values
-        self.parameters['hidden_dim'] = 32 
-        self.parameters['num_layers'] = 3
-        self.parameters['iterations'] = 10 # was 50000 took super long
-        self.parameters['batch_size'] = 32 # changed this to fit smaller datasize 
-        self.parameters['module_name'] = 'gru' # Other optios: 'lstm' or 'lstmLN'
-        self.parameters['z_dim'] = 8 
+        self.parameters['hidden_dim'] = hidden_dim 
+        self.parameters['num_layers'] = num_layers
+        self.parameters['iterations'] = iterations # was 50000 took super long
+        self.parameters['batch_size'] = batch_size # changed this to fit smaller datasize 
+        self.parameters['module_name'] = module_name # Other optios: 'lstm' or 'lstmLN'
+        self.parameters['z_dim'] = z_dim
 
-    def build_dataset(self, seq_length=12):  # can tune seq_length
-        pdb.set_trace()
+    def load_data(self, csv_file): # one trajectory per file 
+        x = np.loadtxt(csv_file, delimiter=',', skiprows=1) # assuming csv file first row is the column names
+        x = np.delete(x, 0, axis=1) # assuming position key is included as first column
+        return x
+
+    def slice(x, seq_length=12):
         tempX = []
-        # Cut data by sequence length
-        for i in range(0, len(self.raw_data) - seq_length):
-            _x = (self.raw_data[i:i + seq_length]).copy()
+        for i in range(0, len(x) - seq_length):
+            _x = (x[i:i + seq_length]).copy()
             t0 = _x[0][0]
             for i in range(len(_x)): # make the first row in the sequence be t0 = 0
                 _x[i][0] -= t0
-            tempX.append(_x)
+            tempX.append(_x)    
+        return tempX  
+
+    def build_dataset(self, csv_files=None, seq_length=12, rows=None):  # load from multiple trajectory files; can tune seq_length
+        # pdb.set_trace()
+        tempX = []
+        if csv_files is not None:
+            for csv_file in csv_files:
+                x = self.load_data(csv_file)
+                if rows is not None:
+                    x = x[:rows]
+                # Cut data by sequence length per trajectory (no interslicing between different trajectories)
+                for i in range(0, len(x) - seq_length):
+                    _x = (x[i:i + seq_length]).copy()
+                    t0 = _x[0][0]
+                    for i in range(len(_x)): # make the first row in the sequence be t0 = 0
+                        _x[i][0] -= t0
+                    tempX.append(_x)
+
+        else:
+            for i in range(0, len(self.dataX) - seq_length):
+                _x = (self.dataX[i:i + seq_length]).copy()
+                t0 = _x[0][0]
+                for i in range(len(_x)): # make the first row in the sequence be t0 = 0
+                    _x[i][0] -= t0
+                tempX.append(_x)
+
         # Mix Data (to make it similar to i.i.d)
         idx = np.random.permutation(len(tempX))
         self.dataX = []
